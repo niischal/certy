@@ -1,38 +1,163 @@
-.App {
-  text-align: center;
+.navbar-custom{
+  height: 100px;
+
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.home{
+  color:#00ADAD;
+}
+.pclass{
+  color:#00ADAD;
+}
+.logotitle{
+position: absolute;
+width: 175px;
+height: 50px;
+left: 15px;
+top: 0px;
+color: #00ADAD;
+font-size: 45px;
+font-weight: bold;
+}
+.logotitle1{
+position: absolute;
+width: 175px;
+height: 15px;
+left: 5px;
+top: 55px;
+color:#00ADAD;
+font-size: 6.5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+}
+.sidebar{
+  background: #00ADAD;
+  color: white;
+  height: 89.1vh;
+}
+.top_section{
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  justify-content: space-between;
+  padding: 15px 10px;
+
+}
+.link{
+  display: flex;
+  color: white;
+  gap: 10px;
+  padding: 5px 10px;
+  border-right: 4px solid transparent;
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  text-decoration: none;
+}
+
+.link:hover{
+  border-right: 4px solid white;
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  background: #00ADAD;
+}
+.main-container{
+  display: flex;
+}
+.main{
+  padding: 20px;
+}
+.logo{
+  font-size: 18px;
+  line-height: 0;
+
+}
+
+#div{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:  #88C7C9;
+}
+#loginlink{
+  text-decoration: none;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+#register1{
+  margin-left: 230px;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#register2{
+  margin-left: 230px;
+  font-size: 20px;
+}
+#card{
+  margin-left: 400px;
+  width: 600px;
+}
+#card-header{
+  background:  #00ADAD;
+  color: white;
+}
+.col{
+  height: 59vh;
+}
+#check{
+  background: #00ADAD;
+  
+}
+#login{
+  background: White;
+}
+h1{
+  text-align: center;
+  color: white;
+}
+#p1{
+  margin-top: 100px;
+}
+#p2{
+  font-size: 75px;
+  color: #00ADAD;
+  text-align: center;
+}
+p{
+  text-align: center;
+  color: #748a8a;  
+}
+form ul{
+  list-style: none;
+ 
+}
+#lbutton{
+  background:#00ADAD;
+  border: none;
+  color: white;
+  width: 120px;
+  
+}
+#rbutton{
+  background: white;
+  border: 1px solid #00ADAD;
+  color: #00ADAD;
+  width: 120px;
+  
+}
+#input-field{
+  width: 275px;
+}
+.ulclass{
+  margin-left: 70px;
+}
+.fclass{
+  margin-left: 30px;
+  color: #748a8a;
+}
+.rclass{
+  margin-left: 35px;
+}
+#home{
+  margin-top: 135px;
 }
