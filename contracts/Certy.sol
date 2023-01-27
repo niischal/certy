@@ -1,6 +1,17 @@
-pragma solidity ^0.5.0;
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.0;
 
 contract Certy{
+
+    constructor() {
+        admins[msg.sender] = true;
+    }
+
+    struct Issuer{
+        address issuerAddress;
+        string id;
+    }
+
     struct Certificate{
         bytes32 cid;
         string holderName;
@@ -10,9 +21,33 @@ contract Certy{
         bool exist;
     }
 
+    //mapping
     mapping(bytes32 => Certificate) public Certificates;
+    mapping(address => bool) admins;
+    mapping(address => Issuer) issuers;
 
-    function storeCertificate(bytes32 _cid, string memory _holderName, string memory _issuerName, string memory _program) public{
+    //modifiers
+    modifier onlyAdmin() {
+        require(admins[msg.sender] == true, "Not Admin");
+        _;
+    }
+    modifier onlyIssuer() {
+        require(admins[msg.sender] == true, "Not Issuer");
+        _;
+    }
+
+
+    //function
+
+    //function to add an issuer
+    function addIssuer(address _issuerAddress, string memory _issuerId) public onlyAdmin{
+        issuers[_issuerAddress].issuerAddress =  _issuerAddress;
+        issuers[ _issuerAddress].id = _issuerId;
+    }
+
+    //Stores Certificate CID and details.
+    function storeCertificate(string memory cid, string memory _holderName, string memory _issuerName, string memory _program) public onlyIssuer{
+        bytes32 _cid=keccak256(abi.encodePacked(cid));
         require(Certificates[_cid].exist == false, "The Certificate already exists.");
         Certificates[_cid].cid = _cid;
         Certificates[_cid].holderName = _holderName;
@@ -22,15 +57,17 @@ contract Certy{
         Certificates[_cid].exist = true;
     }
 
-    function getCertificate(bytes32 _cid) public returns (Certificate memory){
+    //Get Certificate details from cid
+    function getCertificate(string memory cid) public view returns (Certificate memory) {
+        bytes32 _cid=keccak256(abi.encodePacked(cid));
         require(Certificates[_cid].exist == true);
         return Certificates[_cid];
     }
 
-    function check(bytes32 _cid) public  returns(bool){
-        require(Certificates[_cid].exist == true,"The Certificate is invalid");
+    //checks if the certificate with given cid exists or not
+    function check(string memory cid) public view returns(bool) {
+        bytes32 _cid=keccak256(abi.encodePacked(cid));
         return Certificates[_cid].exist;
 
     }
-
 }
