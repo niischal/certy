@@ -42,12 +42,13 @@ const issuerSchema = mongoose.Schema({
     require: true,
   },
   phoneNo: {
-    type: Number,
+    type: String,
     require: true,
   },
   addedByAdmin: {
     type: Boolean,
     require: true,
+    default: false
   },
   certificates: [certificateSchema],
 });
