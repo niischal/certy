@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import {Link} from 'react-router-dom';
+import {FaEye, FaEyeSlash} from "react-icons/fa";
+
 
 const Home = () => {
+const[showPassword, setShowPassword] = useState();
   return (
     <div id="div">
         <div className="container" id="home" >
@@ -18,8 +21,17 @@ const Home = () => {
                             <input type="text" placeholder="Email" id="input-field"/>
                         </li>
                         <li>Password</li>
-                        <li>
-                            <input type="password" placeholder="Password" id="input-field"/>
+                        <li className="password-toggle-icon-list">
+                            <input
+                             type={showPassword ? 'text' : 'password'}
+                             placeholder="Password"
+                             id="input-field"
+                            />
+                            <span 
+                            className="password-toggle-icon" 
+                            onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <FaEye/>  : <FaEyeSlash/>}
+                           </span>
                         </li>
                     </ul>
                     <ul className="ulclass">

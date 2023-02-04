@@ -4,8 +4,12 @@ import axios from 'axios';
 import Success from "../components/Success";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
+
+
 
 const Signup = () => {
+const[showPassword, setShowPassword] = useState();
   const STATUS = Object.freeze({
     IDLE:'idle',
     LOADING: 'loading',
@@ -113,27 +117,38 @@ const Signup = () => {
               />
             </div>
             <div className="form-group d-flex my-3">
-              <div className="col-6 pr-2">
+              <div className="col-6 pr-2" style={{position:'relative', display:'inline-block'}}>
                 <label>Password</label>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className="form-control"
                   placeholder="********"
                   value={password}
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                  <span 
+                  className="password-toggle-icons" 
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEye/>  : <FaEyeSlash/>}
+                  </span>
               </div>
-              <div className="col-6 pl-2">
+              <div className="col-6 pl-2" style={{position:'relative', display:'inline-block'}}>
                 <label>Confirm Password</label>
                 <input
-                  type="password"
+                  // type="password"
+                  type={showPassword ? 'text' : 'password'}
                   className="form-control"
                   placeholder="********"
                   value={cpassword}
                   required
                   onChange={(e) => setCpassword(e.target.value)}
                 />
+                  <span 
+                  className="password-toggle-icons" 
+                  onClick={() => setShowPassword(!showPassword)}>
+                  {showPassword ? <FaEye/>  : <FaEyeSlash/>}
+                  </span>
               </div>
             </div>
             <div className="text-center my-3">
@@ -141,7 +156,7 @@ const Signup = () => {
                 Request
               </button>
             </div>
-            {formStatus==STATUS.ERROR && (<Error error='Passwords do not match.' />)}
+            {formStatus===STATUS.ERROR && (<Error error='Passwords do not match.' />)}
             {status === STATUS.LOADING && (<Loader/>)}
             {status === STATUS.SUCCESS && (<Success success='Registration Details Submitted Succesfully'/>)}
             {status === STATUS.ERROR && (<Error error='Somthing went wrong' />)}

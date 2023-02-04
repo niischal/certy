@@ -161,3 +161,21 @@ form ul{
 #home{
   margin-top: 135px;
 }
+.password-toggle-icon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.password-toggle-icon-list{
+  position: relative;
+  display: inline-block;
+}
+.password-toggle-icons {
+  position: absolute;
+  right: 5px;
+  top: 65%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
