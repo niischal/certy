@@ -137,7 +137,6 @@ const[showPassword, setShowPassword] = useState();
               <div className="col-6 pl-2" style={{position:'relative', display:'inline-block'}}>
                 <label>Confirm Password</label>
                 <input
-                  // type="password"
                   type={showPassword ? 'text' : 'password'}
                   className="form-control"
                   placeholder="********"

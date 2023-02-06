@@ -1,9 +1,54 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
 import {FaEye, FaEyeSlash} from "react-icons/fa";
+import Success from "../components/Success";
+import Error from "../components/Error";
+import Loader from "../components/Loader";
+import { useNavigate  } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const STATUS = Object.freeze({
+    IDLE:'idle',
+    LOADING: 'loading',
+    SUCCESS: 'success',
+    ERROR: 'error'
+  })
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const loginUser = async (e) => {
+    e.preventDefault();
+    setStatus(STATUS.LOADING)
+    if (!email || !password) {
+      setStatus(STATUS.ERROR)
+      return;
+    }
+    try {
+      const res = await axios.post('/api/issuer/issuerLogin', {
+        email,
+        password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const data = res.data;
+      if (!data) {
+        setStatus(STATUS.ERROR)
+      } else {
+        setStatus(STATUS.SUCCESS)
+        navigate('/issuer');
+      }
+    } catch (error) {
+      setStatus(STATUS.ERROR)
+    }
+  }
+  
+
   return (
     <div className="col" id="login">
       <h2 id="p2">CERTY</h2>
@@ -12,14 +57,21 @@ const Login = () => {
         <ul className="ulclass">
           <li >Email</li>
           <li>
-            <input type="text" placeholder="Email" id="input-field"/>
+            <input type="text" placeholder="Email" id="input-field1"
+            value={email}
+            required
+            onChange={(e) => setEmail(e.target.value)}
+            />
           </li>
           <li>Password</li>
           <li className="password-toggle-icon-list">
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
-              id="input-field"
+              id="input-field2"
+              value={password}
+              required
+              onChange={(e) => setPassword(e.target.value)}
             />
             <span 
               className="password-toggle-icon" 
@@ -38,12 +90,15 @@ const Login = () => {
         </ul>
         <ul className="ulclass">
           <li>
-            <Link to="/admin" id="loginlink">
-              <button id="lbutton">Login</button>
+            <Link id="loginlink">
+              <button id="lbutton" onClick={loginUser}>Login</button>
             </Link>
             <Link to="/signup">
               <button id="rbutton"className="rclass">Request</button>
             </Link>
+            {status === STATUS.LOADING && (<Loader/>)}
+            {status === STATUS.SUCCESS && (<Success success='Login Succesfully'/>)}
+            {status === STATUS.ERROR && (<Error error='Invalid Credentials' />)}
           </li>
         </ul>
       </form>

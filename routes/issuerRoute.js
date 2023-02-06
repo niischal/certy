@@ -36,4 +36,20 @@ router.post("/issuerRegistrationRequest", (req, res) => {
   );
 });
 
+router.post("/issuerLogin", (req,res) =>{
+  Issuer.findOne({email:req.body.email}, (err, docs) => {
+    if(!docs){
+      return res.status(400).json({message:"Invalid Credentials"});
+    }
+    else{
+      if(docs.password !== req.body.password) {
+        return res.status(400).json({message:"Invalid Credentials"});
+      }
+      else{
+        return res.status(200).json({message:"Login Successful"});
+      }
+    }
+  })
+})
+
 module.exports = router;

@@ -145,7 +145,10 @@ form ul{
   width: 120px;
   
 }
-#input-field{
+#input-field1{
+  width: 275px;
+}
+#input-field2{
   width: 275px;
 }
 .ulclass{
