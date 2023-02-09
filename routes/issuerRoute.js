@@ -38,12 +38,12 @@ router.post("/issuerRegistrationRequest", (req, res) => {
 router.post("/issuerLogin", (req, res) => {
   Issuer.findOne({ email: req.body.email }, (err, docs) => {
     if (!docs) {
-      return res.status(400).json({ message: "Invalid Credentials" });
+      return res.status(401).json({ message: "Invalid Credentials" });
     } else {
       if (docs.password !== req.body.password) {
-        return res.status(400).json({ message: "Invalid Credentials" });
+        return res.status(401).json({ message: "Invalid Credentials" });
       } else if (docs.addedByAdmin === false) {
-        return res.status(400).json({ message: "Not verified by Admin" });
+        return res.status(401).json({ message: "Not verified by Admin" });
       } else {
         return res
           .status(200)
