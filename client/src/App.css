@@ -106,10 +106,14 @@ font-size: 6.5px;
 }
 #check{
   background: #00ADAD;
+  box-shadow: 0px 72px 80px -48px #223A28;
+  border-radius: 24px;
   
 }
 #login{
   background: White;
+  box-shadow: 0px 72px 80px -48px #223A28;
+  border-radius: 24px;
 }
 h1{
   text-align: center;
