@@ -1,21 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
 import Success from "../components/Success";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
-import {FaEye, FaEyeSlash} from "react-icons/fa";
-
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Web3 from "web3";
 
 const Signup = () => {
-const[showPassword, setShowPassword] = useState();
+  const [showPassword, setShowPassword] = useState();
   const STATUS = Object.freeze({
-    IDLE:'idle',
-    LOADING: 'loading',
-    SUCCESS: 'success',
-    ERROR: 'error'
-  })
+    IDLE: "idle",
+    LOADING: "loading",
+    SUCCESS: "success",
+    ERROR: "error",
+  });
   const [name, setName] = useState("");
   const [issuerId, setIssuerId] = useState("");
   const [phoneNo, setPhoneNo] = useState();
@@ -24,37 +23,53 @@ const[showPassword, setShowPassword] = useState();
   const [cpassword, setCpassword] = useState("");
   const [status, setStatus] = useState(STATUS.IDLE);
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
+  const [address, setAddress] = useState("");
 
   const register = (e) => {
     e.preventDefault();
-    if (password === cpassword) {
+    handleConnect();
+    if (password === cpassword && address !== "") {
       const newUser = {
         name: name,
         issuerId: issuerId,
         phoneNo: phoneNo,
         email: email,
         password: password,
-        address: 'blockaddress'
+        address: address,
       };
-      setStatus(STATUS.LOADING)
+      setStatus(STATUS.LOADING);
       axios
-        .post('/api/issuer/issuerRegistrationRequest', newUser).then(res=>{
-          setStatus(STATUS.SUCCESS)
-          console.log(res)
-          window.location.href = '/'
-        }  
-          )
-          .catch(err=>{
-            setStatus(STATUS.ERROR)
-            console.log(err)
-          })
-      
-      console.log(newUser);
+        .post("/api/issuer/issuerRegistrationRequest", newUser)
+        .then((res) => {
+          setStatus(STATUS.SUCCESS);
+          console.log(res);
+          window.location.href = "/";
+        })
+        .catch((err) => {
+          setStatus(STATUS.ERROR);
+          console.log(err);
+        });
     } else {
       setFormStatus(STATUS.ERROR);
     }
   };
 
+  const handleConnect = async () => {
+    if (window.ethereum) {
+      await window.ethereum.enable();
+      const acc = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+      setAddress(acc[0]);
+    } else if (window.web3) {
+      const web3 = new Web3(window.ethereum.currentProvider);
+      await window.ethereum.enable();
+      const acc = await web3.eth.getAccounts();
+      setAddress(acc[0]);
+    } else {
+      console.log("No Ethereum Browser");
+    }
+  };
   return (
     <div id="div">
       <div className="card my-5" id="card">
@@ -62,7 +77,7 @@ const[showPassword, setShowPassword] = useState();
           <div className="row justify-content-center">
             <h2 id="register1">REGISTRATION FORM</h2>
           </div>
-          
+
           <div className="row justify-content-center">
             <h3 id="register2">Welcome Issuer, Please login to your account</h3>
           </div>
@@ -118,37 +133,45 @@ const[showPassword, setShowPassword] = useState();
               />
             </div>
             <div className="form-group d-flex my-3">
-              <div className="col-6 pr-2" style={{position:'relative', display:'inline-block'}}>
+              <div
+                className="col-6 pr-2"
+                style={{ position: "relative", display: "inline-block" }}
+              >
                 <label>Password</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   className="form-control"
                   placeholder="********"
                   value={password}
                   required
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                  <span 
-                  className="password-toggle-icons" 
-                  onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEye/>  : <FaEyeSlash/>}
-                  </span>
+                <span
+                  className="password-toggle-icons"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </span>
               </div>
-              <div className="col-6 pl-2" style={{position:'relative', display:'inline-block'}}>
+              <div
+                className="col-6 pl-2"
+                style={{ position: "relative", display: "inline-block" }}
+              >
                 <label>Confirm Password</label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   className="form-control"
                   placeholder="********"
                   value={cpassword}
                   required
                   onChange={(e) => setCpassword(e.target.value)}
                 />
-                  <span 
-                  className="password-toggle-icons" 
-                  onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <FaEye/>  : <FaEyeSlash/>}
-                  </span>
+                <span
+                  className="password-toggle-icons"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEye /> : <FaEyeSlash />}
+                </span>
               </div>
             </div>
             <div className="text-center my-3">
@@ -156,10 +179,14 @@ const[showPassword, setShowPassword] = useState();
                 Request
               </button>
             </div>
-            {formStatus===STATUS.ERROR && (<Error error='Passwords do not match.' />)}
-            {status === STATUS.LOADING && (<Loader/>)}
-            {status === STATUS.SUCCESS && (<Success success='Registration Details Submitted Succesfully'/>)}
-            {status === STATUS.ERROR && (<Error error='Somthing went wrong' />)}
+            {formStatus === STATUS.ERROR && (
+              <Error error="Passwords do not match." />
+            )}
+            {status === STATUS.LOADING && <Loader />}
+            {status === STATUS.SUCCESS && (
+              <Success success="Registration Details Submitted Succesfully" />
+            )}
+            {status === STATUS.ERROR && <Error error="Somthing went wrong" />}
             <hr />
             <div className="text-center my-3">
               <Link to="/">

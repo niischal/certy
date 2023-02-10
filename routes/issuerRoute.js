@@ -18,6 +18,7 @@ router.post("/issuerRegistrationRequest", (req, res) => {
           email: req.body.email,
           password: req.body.password,
           phoneNo: req.body.phoneNo,
+          address: req.body.address,
           addedByAdmin: false,
         });
         newIssuer.save((err) => {
@@ -45,9 +46,12 @@ router.post("/issuerLogin", (req, res) => {
       } else if (docs.addedByAdmin === false) {
         return res.status(401).json({ message: "Not verified by Admin" });
       } else {
-        return res
-          .status(200)
-          .json({ message: "Login Successful", email: req.body.email });
+        return res.status(200).json({
+          message: "Login Successful",
+          email: docs.email,
+          name: docs.name,
+          address: docs.address,
+        });
       }
     }
   });
