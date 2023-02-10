@@ -33,6 +33,7 @@ const Login = () => {
           password,
         })
         .then((res) => {
+          console.log("res.data", res.data);
           const data = res.data;
           if (!data) {
             setStatus(STATUS.ERROR);
