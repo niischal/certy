@@ -57,4 +57,19 @@ router.post("/issuerLogin", (req, res) => {
   });
 });
 
+//all issuers
+router.get('/allissuers', async(req,res) => {
+  const allissuers = await Issuer.find();
+  const filteredIssuers = allissuers.filter(issuer => issuer.addedByAdmin);
+  res.send(filteredIssuers);
+});
+
+//all request
+router.get('/allrequest', async(req, res) => {
+  const allissuers = await Issuer.find();
+  const filteredIssuers = allissuers.filter(issuer => !issuer.addedByAdmin);
+  res.send(filteredIssuers);
+});
+
+
 module.exports = router;

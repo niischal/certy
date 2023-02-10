@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaHome, FaUser, FaReadme, FaBars } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
+import IssuerList from "../components/IssuerList";
+import IssuerRequest from "../components/IssuerRequest";
 
 const routes = [
   {
@@ -15,17 +17,22 @@ const routes = [
     icon: <FaUser />,
   },
   {
-    path: "/users",
+    path: "/admin",
     name: "Issuer_Details",
     icon: <FaReadme />,
   },
 ];
 
 const Sidebar = ({ children }) => {
+  const [showIssuerList, setShowIssuerList] = useState(false);
+  const handleIssuerListClick = () => setShowIssuerList(!showIssuerList);
+  const [showRequest, setShowRequest] = useState(false);
+  const handleIssuerRequest = () => setShowRequest(!showRequest);
+
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   return (
-    <div className="main-container">
+    <div className="main-container" style={{display:"flex"}}>
       <motion.div
         animate={{ width: isOpen ? "200px" : "37px" }}
         className="sidebar"
@@ -37,16 +44,29 @@ const Sidebar = ({ children }) => {
           </div>
         </div>
 
-        <section className="routes">
+       <section className="routes">
           {routes.map((route) => (
             <NavLink to={route.path} key={route.name} className="link">
-              <div className="icon">{route.icon}</div>
+              <div className="icon">
+                {route.name === "Issuer_Details"
+                  ? <FaReadme onClick={handleIssuerListClick} />
+                  :route.name === "Add_Issuer"
+                  ? <FaUser onClick={handleIssuerRequest}/>
+                  : route.icon
+                }
+              </div>
+              
               <div className="link_text">{route.name}</div>
             </NavLink>
           ))}
         </section>
+
       </motion.div>
-      <main>{children}</main>
+      <main>
+        {children}
+       {showIssuerList && <IssuerList />}
+       {showRequest && <IssuerRequest />}
+      </main>
     </div>
   );
 };
