@@ -1,38 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { FaHome, FaUser, FaReadme, FaBars } from "react-icons/fa";
-import { NavLink } from "react-router-dom";
-import IssuerList from "../components/IssuerList";
-import IssuerRequest from "../components/IssuerRequest";
 
-const routes = [
-  {
-    path: "/admin",
-    name: "Dashboard",
-    icon: <FaHome />,
-  },
-  {
-    path: "/issuer",
-    name: "Add_Issuer",
-    icon: <FaUser />,
-  },
-  {
-    path: "/admin",
-    name: "Issuer_Details",
-    icon: <FaReadme />,
-  },
-];
+import { FaBars } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import AdminRoutes from "./AdminRoutes";
 
-const Sidebar = ({ children }) => {
-  const [showIssuerList, setShowIssuerList] = useState(false);
-  const handleIssuerListClick = () => setShowIssuerList(!showIssuerList);
-  const [showRequest, setShowRequest] = useState(false);
-  const handleIssuerRequest = () => setShowRequest(!showRequest);
+const routes = AdminRoutes;
 
+const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+  const [active, setActive] = useState(1);
+
+  const checkActive = (id) => {
+    return id === active ? "link active" : "link";
+  };
   return (
-    <div className="main-container" style={{display:"flex"}}>
+    <>
       <motion.div
         animate={{ width: isOpen ? "200px" : "37px" }}
         className="sidebar"
@@ -44,30 +28,21 @@ const Sidebar = ({ children }) => {
           </div>
         </div>
 
-       <section className="routes">
+        <section className="routes">
           {routes.map((route) => (
-            <NavLink to={route.path} key={route.name} className="link">
-              <div className="icon">
-                {route.name === "Issuer_Details"
-                  ? <FaReadme onClick={handleIssuerListClick} />
-                  :route.name === "Add_Issuer"
-                  ? <FaUser onClick={handleIssuerRequest}/>
-                  : route.icon
-                }
-              </div>
-              
-              <div className="link_text">{route.name}</div>
-            </NavLink>
+            <Link
+              to={route.path}
+              key={route.name}
+              className={checkActive(route.id)}
+              onClick={() => setActive(route.id)}
+            >
+              <div className="icon">{route.icon}</div>
+              {isOpen ? <div className="link_text">{route.name}</div> : <></>}
+            </Link>
           ))}
         </section>
-
       </motion.div>
-      <main>
-        {children}
-       {showIssuerList && <IssuerList />}
-       {showRequest && <IssuerRequest />}
-      </main>
-    </div>
+    </>
   );
 };
 
