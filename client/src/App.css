@@ -58,9 +58,11 @@ font-size: 6.5px;
 }
 
 .link:hover{
+  
+  color: white;
   border-right: 4px solid white;
   transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
-  background: #00ADAD;
+  background: #00c5c5;
 }
 .main-container{
   display: flex;
@@ -72,6 +74,13 @@ font-size: 6.5px;
   font-size: 18px;
   line-height: 0;
 
+}
+
+.active{
+  color: #00ADAD;
+  border-right: 4px solid white;
+  transition: 0.2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+  background:white ;
 }
 
 #div{
