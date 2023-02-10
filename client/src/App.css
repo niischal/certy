@@ -118,6 +118,7 @@ font-size: 6.5px;
 h1{
   text-align: center;
   color: white;
+  user-select: none;
 }
 #p1{
   margin-top: 100px;
