@@ -59,6 +59,7 @@ const Login = () => {
               type="text"
               placeholder="Email"
               id="input-field1"
+              className="form-control"
               value={email}
               required
               onChange={(e) => setEmail(e.target.value)}
@@ -70,6 +71,7 @@ const Login = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               id="input-field2"
+              className="form-control"
               value={password}
               required
               onChange={(e) => setPassword(e.target.value)}
