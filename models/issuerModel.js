@@ -5,6 +5,14 @@ const programSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  dateOfProgramInitiation: {
+    type: Date,
+    require: true
+  },
+  dateOfCompletion:{
+    type: true,
+    require: true
+  },
   certificates: [certificateSchema],
 })
 
