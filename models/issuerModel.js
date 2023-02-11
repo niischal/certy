@@ -1,5 +1,13 @@
 const mongoose = require("mongoose");
 
+const programSchema = mongoose.Schema({
+  programName: {
+    type: String,
+    require: true,
+  },
+  certificates: [certificateSchema],
+})
+
 const certificateSchema = mongoose.Schema({
   cid: {
     type: String,
@@ -50,7 +58,8 @@ const issuerSchema = mongoose.Schema({
     require: true,
     default: false
   },
-  certificates: [certificateSchema],
+  
+  programs: [programSchema],
 });
 
 const Issuer = mongoose.model("issuers", issuerSchema);
