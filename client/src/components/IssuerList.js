@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 

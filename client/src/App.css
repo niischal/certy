@@ -200,7 +200,7 @@ form ul{
   background:#00ADAD;
   border: none;
   color: white;
-  width: 100px;
+  /* width: 100px; */
   border-radius: 5px;
   padding: 7px;
 }
