@@ -75,6 +75,15 @@ font-size: 6.5px;
 
 }
 
+.simple-link{
+  align-items: center;
+  color: gray;
+  text-decoration: none;
+}
+.simple-link:hover{
+  color: #00ADAD;
+  text-decoration:underline;
+}
 .active{
   color: #00ADAD;
   border-right: 4px solid white;
@@ -95,19 +104,31 @@ font-size: 6.5px;
   color: white;
 }
 #register1{
-  margin-left: 230px;
+  text-align: center;
 }
 #register2{
-  margin-left: 230px;
+  text-align: center;
   font-size: 20px;
 }
 #card{
-  margin-left: 400px;
+  align-self: center;
   width: 600px;
 }
-#card-header{
+.card-head{
+  margin-bottom: 0;
+  padding: 2px;
+  border-bottom: 0;
+  width: 100%;
   background:  #00ADAD;
   color: white;
+  border-radius: 24px 24px 0px 0px;
+}
+.r-card-body{
+  background:  white;
+  border-radius:  0px 0px 24px 24px;
+  
+  box-shadow: 0px 72px 80px -48px #223A28;
+
 }
 .col{
   height: 59vh;
@@ -118,6 +139,22 @@ font-size: 6.5px;
   border-radius: 24px;
   
 }
+.home-card{
+  margin-top: 5rem;
+  position: relative;
+  box-shadow: 0px 72px 80px -48px #223A28;
+  border-radius: 24px;
+}
+.verify-box{
+  background: #00ADAD;
+  border-radius:  0px 24px   24px 0px ;
+}
+.i-login{
+  background: White;
+  border-radius: 24px 0px  0px 24px;
+}
+
+ 
 #login{
   background: White;
   box-shadow: 0px 72px 80px -48px #223A28;
@@ -144,19 +181,26 @@ form ul{
   list-style: none;
  
 }
-#lbutton{
+.lbutton{
   background:#00ADAD;
   border: none;
   color: white;
   width: 120px;
-  
+  padding: 5px;
+  border-radius: 10px;
 }
-#rbutton{
+.rbutton{
   background: white;
   border: 1px solid #00ADAD;
   color: #00ADAD;
   width: 120px;
+  padding: 5px;
+  border-radius: 10px;
   
+}
+.rbutton:hover{
+color: white;
+background-color: #00ADAD;
 }
 #input-field1{
   width: 275px;
@@ -174,8 +218,11 @@ form ul{
 .rclass{
   margin-left: 35px;
 }
-#home{
-  margin-top: 135px;
+.refresh-icon{
+  scale: 1.5;
+}
+.refresh-icon:hover{
+  color: #00ADAD;
 }
 .password-toggle-icon {
   position: absolute;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Success from "../components/Success";
@@ -6,7 +6,7 @@ import Error from "../components/Error";
 import Loader from "../components/Loader";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Web3 from "web3";
-
+import { BiRefresh } from "react-icons/bi";
 const Signup = () => {
   const [showPassword, setShowPassword] = useState();
   const STATUS = Object.freeze({
@@ -24,6 +24,10 @@ const Signup = () => {
   const [status, setStatus] = useState(STATUS.IDLE);
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    handleConnect();
+  }, []);
 
   const register = (e) => {
     e.preventDefault();
@@ -71,129 +75,160 @@ const Signup = () => {
     }
   };
   return (
-    <div id="div">
-      <div className="card my-5" id="card">
-        <div className="card-header" id="card-header">
-          <div className="row justify-content-center">
-            <h2 id="register1">REGISTRATION FORM</h2>
+    <div id="div" className="container-fluid">
+      <div className="row justify-content-center">
+        <div className="col-6 m-3">
+          <div className="card-head">
+            <div className="row justify-content-center mt-3">
+              <h2 id="register1">REGISTRATION FORM</h2>
+            </div>
+
+            <div className="row justify-content-center">
+              <h3 id="register2">
+                Welcome Issuer, Please login to your account
+              </h3>
+            </div>
+            <div className="row justify-content-center">
+              <>Please Check Your Wallet Address</>
+            </div>
           </div>
+          <div className="r-card-body">
+            <div className="row justify-content-center">
+              <form className="col-10" onSubmit={register}>
+                <div className="form-group my-3">
+                  <label>Institute Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="NIST College"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
 
-          <div className="row justify-content-center">
-            <h3 id="register2">Welcome Issuer, Please login to your account</h3>
+                <div className="form-group d-flex my-3 justify-content-between">
+                  <div className="col-5 ">
+                    <label>Issuer ID (PAN)</label>
+                    <input
+                      className="form-control"
+                      placeholder="423634432"
+                      value={issuerId}
+                      required
+                      onChange={(e) => setIssuerId(e.target.value)}
+                    />
+                  </div>
+                  <div className="col-5 ">
+                    <label>Phone No.</label>
+                    <input
+                      type="tel"
+                      className="form-control"
+                      placeholder="0119432"
+                      value={phoneNo}
+                      required
+                      onChange={(e) => setPhoneNo(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group my-3">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="info@nist.edu.np"
+                    value={email}
+                    required
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+                <div className="form-group d-flex my-3 justify-content-between">
+                  <div
+                    className="col-5"
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <label>Password</label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      placeholder="********"
+                      value={password}
+                      required
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <span
+                      className="password-toggle-icons"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
+                    </span>
+                  </div>
+                  <div
+                    className="col-5"
+                    style={{ position: "relative", display: "inline-block" }}
+                  >
+                    <label>Confirm Password</label>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className="form-control"
+                      placeholder="********"
+                      value={cpassword}
+                      required
+                      onChange={(e) => setCpassword(e.target.value)}
+                    />
+                    <span
+                      className="password-toggle-icons"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <FaEye /> : <FaEyeSlash />}
+                    </span>
+                  </div>
+                </div>
+                <div className="d-flex">
+                  <div className="col-12 text-center">
+                    {address === "" ? (
+                      <div>
+                        Wallet Not Connected &nbsp;
+                        <BiRefresh
+                          className="refresh-icon"
+                          onClick={handleConnect}
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        Wallet Address: <b>{address}</b> &nbsp;
+                        <BiRefresh
+                          className="refresh-icon"
+                          onClick={handleConnect}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="text-center my-3">
+                  <button type="submit" className="rbutton">
+                    Request
+                  </button>
+                </div>
+                {formStatus === STATUS.ERROR && (
+                  <Error error="Passwords do not match." />
+                )}
+                {status === STATUS.LOADING && <Loader />}
+                {status === STATUS.SUCCESS && (
+                  <Success success="Registration Details Submitted Succesfully" />
+                )}
+                {status === STATUS.ERROR && (
+                  <Error error="Somthing went wrong" />
+                )}
+                <hr />
+                <div className="text-center">
+                  <Link to="/" className="simple-link">
+                    <p>Already Have account?</p>
+                  </Link>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-
-        <div className="row justify-content-center">
-          <form className="col-lg-6" onSubmit={register}>
-            <div className="form-group my-3">
-              <label>Institute Name</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="NIST College"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-group d-flex my-3">
-              <div className="col-6 pr-2">
-                <label>Issuer ID (PAN)</label>
-                <input
-                  className="form-control"
-                  placeholder="423634432"
-                  value={issuerId}
-                  required
-                  onChange={(e) => setIssuerId(e.target.value)}
-                />
-              </div>
-              <div className="col-6 pl-2">
-                <label>Phone No.</label>
-                <input
-                  type="tel"
-                  className="form-control"
-                  placeholder="0119432"
-                  value={phoneNo}
-                  required
-                  onChange={(e) => setPhoneNo(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="form-group my-3">
-              <label>Email</label>
-              <input
-                type="email"
-                className="form-control"
-                placeholder="info@nist.edu.np"
-                value={email}
-                required
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="form-group d-flex my-3">
-              <div
-                className="col-6 pr-2"
-                style={{ position: "relative", display: "inline-block" }}
-              >
-                <label>Password</label>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control"
-                  placeholder="********"
-                  value={password}
-                  required
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <span
-                  className="password-toggle-icons"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEye /> : <FaEyeSlash />}
-                </span>
-              </div>
-              <div
-                className="col-6 pl-2"
-                style={{ position: "relative", display: "inline-block" }}
-              >
-                <label>Confirm Password</label>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  className="form-control"
-                  placeholder="********"
-                  value={cpassword}
-                  required
-                  onChange={(e) => setCpassword(e.target.value)}
-                />
-                <span
-                  className="password-toggle-icons"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEye /> : <FaEyeSlash />}
-                </span>
-              </div>
-            </div>
-            <div className="text-center my-3">
-              <button type="submit" className="btn btn-outline-info">
-                Request
-              </button>
-            </div>
-            {formStatus === STATUS.ERROR && (
-              <Error error="Passwords do not match." />
-            )}
-            {status === STATUS.LOADING && <Loader />}
-            {status === STATUS.SUCCESS && (
-              <Success success="Registration Details Submitted Succesfully" />
-            )}
-            {status === STATUS.ERROR && <Error error="Somthing went wrong" />}
-            <hr />
-            <div className="text-center my-3">
-              <Link to="/">
-                <p>Already Have account?Login</p>
-              </Link>
-            </div>
-          </form>
         </div>
       </div>
     </div>

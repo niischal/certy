@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   return (
-    <div className="col" id="login">
+    <div className="col i-login">
       <h2 id="p2">CERTY</h2>
       <p>Welcome Issuer, Please login to your account</p>
       <form>
@@ -85,24 +85,22 @@ const Login = () => {
             </span>
           </li>
         </ul>
-        <ul className="ulclass">
+        {/* <ul className="ulclass">
           <input type="checkbox" />
           <label>Remember me</label>
           <label className="fclass">
             <a href="http://localhost:3000/">Forgot password?</a>
           </label>
-        </ul>
+        </ul> */}
         <ul className="ulclass">
           <li>
             <Link id="loginlink">
-              <button id="lbutton" onClick={loginUser}>
+              <button className="lbutton" onClick={loginUser}>
                 Login
               </button>
             </Link>
             <Link to="/signup">
-              <button id="rbutton" className="rclass">
-                Request
-              </button>
+              <button className="rbutton rclass">Request</button>
             </Link>
             {status === STATUS.LOADING && <Loader />}
             {status === STATUS.SUCCESS && (

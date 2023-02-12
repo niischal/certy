@@ -46,11 +46,11 @@ function AdminLogin() {
   };
   return (
     <>
-      <div id="div" className="text-center">
+      <div id="div" className="container-fluid text-center ">
         <div className="row align-items-center justify-content-center">
           <div className="col-4 m-5 p-3" id="login">
             <h2 id="p2">CERTY</h2>
-            <p>Welcome Issuer, Please login to your account</p>
+            <p>Welcome Admin, Please login to your account</p>
             <form className="row justify-content-center">
               <div className="form-group my-3 text-start ">
                 <div className="ps-5 pe-5">
