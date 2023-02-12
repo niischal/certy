@@ -17,7 +17,7 @@ const IssuerList = () => {
   return (
     <div style={{ margin: "2rem" }}>
       <h3>List of all Issuers</h3>
-      <Table striped bordered hover size="sm">
+      <table className="table">
         <thead>
           <tr>
             <th>S.N.</th>
@@ -46,7 +46,7 @@ const IssuerList = () => {
             </tr>
           )}
         </tbody>
-      </Table>
+      </table>
     </div>
   );
 };

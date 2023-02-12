@@ -1,21 +1,5 @@
 const mongoose = require("mongoose");
 
-const programSchema = mongoose.Schema({
-  programName: {
-    type: String,
-    require: true,
-  },
-  dateOfProgramInitiation: {
-    type: Date,
-    require: true
-  },
-  dateOfCompletion:{
-    type: true,
-    require: true
-  },
-  certificates: [certificateSchema],
-})
-
 const certificateSchema = mongoose.Schema({
   cid: {
     type: String,
@@ -34,6 +18,22 @@ const certificateSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+});
+
+const programSchema = mongoose.Schema({
+  programName: {
+    type: String,
+    require: true,
+  },
+  dateOfProgramInitiation: {
+    type: Date,
+    require: true,
+  },
+  dateOfCompletion: {
+    type: Date,
+    require: true,
+  },
+  certificates: [certificateSchema],
 });
 
 const issuerSchema = mongoose.Schema({
@@ -64,9 +64,9 @@ const issuerSchema = mongoose.Schema({
   addedByAdmin: {
     type: Boolean,
     require: true,
-    default: false
+    default: false,
   },
-  
+
   programs: [programSchema],
 });
 

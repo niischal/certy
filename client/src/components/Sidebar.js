@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import { FaBars } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import AdminRoutes from "./AdminRoutes";
 
 const routes = AdminRoutes;
@@ -10,10 +10,9 @@ const routes = AdminRoutes;
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
-  const [active, setActive] = useState(1);
-
-  const checkActive = (id) => {
-    return id === active ? "link active" : "link";
+  const location = useLocation();
+  const checkActive = (route) => {
+    return location.pathname === route.path ? "link active" : "link";
   };
   return (
     <>
@@ -33,8 +32,7 @@ const Sidebar = () => {
             <Link
               to={route.path}
               key={route.name}
-              className={checkActive(route.id)}
-              onClick={() => setActive(route.id)}
+              className={checkActive(route)}
             >
               <div className="icon">{route.icon}</div>
               {isOpen ? <div className="link_text">{route.name}</div> : <></>}

@@ -1,6 +1,5 @@
 .navbar-custom{
   height: 100px;
-
 }
 
 .home{
@@ -195,4 +194,13 @@ form ul{
   top: 65%;
   transform: translateY(-50%);
   cursor: pointer;
+}
+
+.solid-btn{
+  background:#00ADAD;
+  border: none;
+  color: white;
+  width: 100px;
+  border-radius: 5px;
+  padding: 7px;
 }

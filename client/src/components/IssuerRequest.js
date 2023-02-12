@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import { TiTick } from "react-icons/ti";
 
 const IssuerRequest = () => {
   const [users, setUsers] = useState([]);
@@ -14,10 +14,22 @@ const IssuerRequest = () => {
     getIssuers();
   }, [users]);
 
+  const acceptIssuerRequest = async (issuerId) => {
+    console.log("issuerId", issuerId);
+    await axios
+      .post("/api/issuer/acceptIssuerRequest ", { issuerId })
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+
   return (
     <div style={{ margin: "2rem" }}>
       <h3>Request List</h3>
-      <Table striped bordered hover size="sm">
+      <table className="table">
         <thead>
           <tr>
             <th>S.N.</th>
@@ -40,7 +52,13 @@ const IssuerRequest = () => {
                   <td>{e.phoneNo}</td>
                   <td>
                     {" "}
-                    <Button>Accept</Button>{" "}
+                    <button
+                      className="solid-btn mx-auto"
+                      onClick={() => acceptIssuerRequest(e._id)}
+                    >
+                      <TiTick />
+                      Accept
+                    </button>{" "}
                   </td>
                 </tr>
               );
@@ -51,7 +69,7 @@ const IssuerRequest = () => {
             </tr>
           )}
         </tbody>
-      </Table>
+      </table>
     </div>
   );
 };
