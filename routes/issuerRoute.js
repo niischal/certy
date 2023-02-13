@@ -51,7 +51,7 @@ router.post("/issuerLogin", (req, res) => {
           email: docs.email,
           name: docs.name,
           address: docs.address,
-          _id: docs._id
+          _id: docs._id,
         });
       }
     }
@@ -59,41 +59,22 @@ router.post("/issuerLogin", (req, res) => {
 });
 
 //Add a new Program
-router.post('/addProgram', async(req, res) => {
-  const {currentUser, programDetails} = req.body;
-  const issuer = await Issuer.findOne({_id: currentUser._id});
+router.post("/addProgram", async (req, res) => {
+  const { currentUser, programDetails } = req.body;
+  const issuer = await Issuer.findOne({ _id: currentUser._id });
   const newProgram = {
     programName: programDetails.programName,
     dateOfProgramInitiation: programDetails.initiationDate,
-    dateOfCompletion: programDetails.completionDate
-  }
-  issuer.programs.push(newProgram)
-  issuer.save((err)=>{
-    if(err){
-      return res.status(400).json({message:'Something went wrong'});
+    dateOfCompletion: programDetails.completionDate,
+  };
+  issuer.programs.push(newProgram);
+  issuer.save((err) => {
+    if (err) {
+      return res.status(400).json({ message: "Something went wrong" });
+    } else {
+      res.send("Your Program has been added Successfully!");
     }
-    else{
-      res.send("Your Program has been added Successfully!")
-    }
-  })
-});
-
-//all issuers
-router.get("/allissuers", async (req, res) => {
-  const allissuers = await Issuer.find();
-  const filteredIssuers = allissuers.filter((issuer) => issuer.addedByAdmin);
-  res.send(filteredIssuers);
-});
-
-//all request
-router.get("/allrequest", async (req, res) => {
-  const allissuers = await Issuer.find();
-  const filteredIssuers = allissuers.filter((issuer) => !issuer.addedByAdmin);
-  res.send(filteredIssuers);
-});
-
-router.post("/acceptIssuerRequest", async (req, res) => {
-  await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true });
+  });
 });
 
 module.exports = router;

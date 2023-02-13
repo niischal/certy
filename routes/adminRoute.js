@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Admin = require("../models/adminModel");
+const Issuer = require("../models/issuerModel");
 
 const contractInfo = require("../web3");
 
@@ -45,5 +46,19 @@ router.post("/acceptIssuerRequest", async (req, res) => {
   } else {
     console.log("contract not loaded");
   }
+});
+
+//all issuers
+router.get("/allissuers", async (req, res) => {
+  const allissuers = await Issuer.find();
+  const filteredIssuers = allissuers.filter((issuer) => issuer.addedByAdmin);
+  res.send(filteredIssuers);
+});
+
+//all request
+router.get("/allrequest", async (req, res) => {
+  const allissuers = await Issuer.find();
+  const filteredIssuers = allissuers.filter((issuer) => !issuer.addedByAdmin);
+  res.send(filteredIssuers);
 });
 module.exports = router;
