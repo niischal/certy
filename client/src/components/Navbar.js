@@ -38,8 +38,9 @@ const Navbar = (props) => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
+              <NavLink className="nav-link" to="/"  onClick={()=>{localStorage.removeItem('currentUser')}}>
                 <p className="pclass">Log Out</p>{" "}
+                
               </NavLink>
             </li>
           </ul>

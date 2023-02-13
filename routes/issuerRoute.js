@@ -51,10 +51,31 @@ router.post("/issuerLogin", (req, res) => {
           email: docs.email,
           name: docs.name,
           address: docs.address,
+          _id: docs._id
         });
       }
     }
   });
+});
+
+//Add a new Program
+router.post('/addProgram', async(req, res) => {
+  const {currentUser, programDetails} = req.body;
+  const issuer = await Issuer.findOne({_id: currentUser._id});
+  const newProgram = {
+    programName: programDetails.programName,
+    dateOfProgramInitiation: programDetails.initiationDate,
+    dateOfCompletion: programDetails.completionDate
+  }
+  issuer.programs.push(newProgram)
+  issuer.save((err)=>{
+    if(err){
+      return res.status(400).json({message:'Something went wrong'});
+    }
+    else{
+      res.send("Your Program has been added Successfully!")
+    }
+  })
 });
 
 //all issuers

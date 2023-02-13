@@ -41,6 +41,7 @@ const Login = () => {
             console.log("data", data.email);
             setStatus(STATUS.SUCCESS);
             navigate("/issuer");
+            localStorage.setItem('currentUser', JSON.stringify(data))
           }
         });
     } catch (error) {

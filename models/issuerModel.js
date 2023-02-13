@@ -33,7 +33,7 @@ const programSchema = mongoose.Schema({
     type: Date,
     require: true,
   },
-  certificates: [certificateSchema],
+  certificates: [mongoose.Schema.Types.ObjectId],
 });
 
 const issuerSchema = mongoose.Schema({

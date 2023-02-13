@@ -1,6 +1,18 @@
 import React, { useState } from "react";
+import axios from "axios";
+import Error from "./Error";
+import Loader from "./Loader";
+import Success from "./Success";
 
 function AddProgramModal({ changeModalState }) {
+  const STATUS = Object.freeze({
+    IDLE: "idle",
+    LOADING: "loading",
+    SUCCESS: "success",
+    ERROR: "error",
+  });
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const initialState = {
     programName: "",
     initiationDate: "",
@@ -10,7 +22,26 @@ function AddProgramModal({ changeModalState }) {
 
   const handleAddProgram = (e) => {
     e.preventDefault();
-    console.log("programDetails", programDetails);
+    if( programDetails.initiationDate <= programDetails.completionDate ){
+      setFormStatus(STATUS.SUCCESS)
+      const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+      const newProgram = {currentUser,programDetails};
+      setStatus(STATUS.LOADING)
+      axios
+        .post('/api/issuer/addProgram', newProgram)
+        .then((res)=>{
+          setStatus(STATUS.SUCCESS)
+          console.log(res)
+          setProgramDetails(initialState)
+        })
+        .catch((err)=>{
+          setStatus(STATUS.ERROR)
+          console.log("Something went wrong.", err)
+        })
+    }
+    else{
+      setFormStatus(STATUS.ERROR);
+    }
   };
 
   return (
@@ -31,6 +62,16 @@ function AddProgramModal({ changeModalState }) {
                 onClick={changeModalState}
               ></button>
             </div>
+            {formStatus === STATUS.ERROR && (
+                  <Error error="Completion Date is Earlier than Program Initiation." />
+            )}
+            {status === STATUS.LOADING && <Loader />}
+            {status === STATUS.SUCCESS && (
+              <Success success="Your Program has been Added Successfully!" />
+            )}
+            {status === STATUS.ERROR && (
+              <Error error="Somthing went wrong" />
+            )}
             <form onSubmit={handleAddProgram}>
               <div className="modal-body ">
                 <div className="row">
@@ -60,7 +101,7 @@ function AddProgramModal({ changeModalState }) {
                   </div>
                   <div className="col-6">
                     <label className="col-form-label">
-                      Date of Initiation:{" "}
+                      Date of Completion:{" "}
                     </label>
                   </div>
                 </div>
