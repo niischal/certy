@@ -23,22 +23,22 @@ function AddProgramModal({ changeModalState }) {
   const handleAddProgram = (e) => {
     e.preventDefault();
     if( programDetails.initiationDate <= programDetails.completionDate ){
+      setFormStatus(STATUS.SUCCESS)
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const newProgram = {currentUser,programDetails};
       setStatus(STATUS.LOADING)
       axios
-        .post('/api/issuer/addProgram', newProgram)
-        .then((res)=>{
-          setStatus(STATUS.SUCCESS)
-          console.log(res)
-          setProgramDetails(initialState)
+        .post("/api/issuer/addProgram", newProgram)
+        .then((res) => {
+          setStatus(STATUS.SUCCESS);
+          console.log(res);
+          setProgramDetails(initialState);
         })
-        .catch((err)=>{
-          setStatus(STATUS.ERROR)
-          console.log("Something went wrong.", err)
-        })
-    }
-    else{
+        .catch((err) => {
+          setStatus(STATUS.ERROR);
+          console.log("Something went wrong.", err);
+        });
+    } else {
       setFormStatus(STATUS.ERROR);
     }
   };
@@ -62,15 +62,13 @@ function AddProgramModal({ changeModalState }) {
               ></button>
             </div>
             {formStatus === STATUS.ERROR && (
-                  <Error error="Completion Date is Earlier than Program Initiation." />
+              <Error error="Completion Date is Earlier than Program Initiation." />
             )}
             {status === STATUS.LOADING && <Loader />}
             {status === STATUS.SUCCESS && (
               <Success success="Your Program has been Added Successfully" />
             )}
-            {status === STATUS.ERROR && (
-              <Error error="Somthing went wrong" />
-            )}
+            {status === STATUS.ERROR && <Error error="Somthing went wrong" />}
             <form onSubmit={handleAddProgram}>
               <div className="modal-body ">
                 <div className="row">

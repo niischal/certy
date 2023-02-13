@@ -82,4 +82,16 @@ contract Certy {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
         return Certificates[_cid].exist;
     }
+
+    //Only for Test
+
+    function returnIssuers(
+        address _issuerAddress
+    ) public view returns (Issuer memory) {
+        return issuers[_issuerAddress];
+    }
+
+    function returnAddress() public view returns (address) {
+        return msg.sender;
+    }
 }

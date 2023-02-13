@@ -17,7 +17,7 @@ const IssuerRequest = () => {
   const acceptIssuerRequest = async (issuerId) => {
     console.log("issuerId", issuerId);
     await axios
-      .post("/api/issuer/acceptIssuerRequest ", { issuerId })
+      .post("/api/admin/acceptIssuerRequest ", { issuerId })
       .then((res) => {
         console.log("res", res);
       })
