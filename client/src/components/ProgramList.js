@@ -21,11 +21,11 @@ function ProgramList() {
   const changeModalState = () => {
     setModalState(!modalState);
   };
-  const updateTableState =()=>{
+  const updateTableState = async ()=>{
     setTableState(!tableState)
   };
   useEffect(()=>{
-    const fetchPrograms = async()=>{
+    const fetchPrograms = async ()=>{
       setStatus(STATUS.LOADING)
       await axios
       .post('/api/issuer/getIssuerById', {userId})
@@ -39,8 +39,7 @@ function ProgramList() {
       })
     }
     fetchPrograms();    
-  },[programs])
-  console.log(programs)
+  },[tableState])
   return (
     <div className="container-fluid m-5">
       <div className="row justify-content-between">
@@ -79,7 +78,7 @@ function ProgramList() {
          })}
         </tbody>
       </table>
-      
+      {status === STATUS.LOADING && <Loader/>}
       {status === STATUS.ERROR && <Error error='Something went Wrong'/>}
       {modalState ? (
         <AddProgramModal changeModalState={changeModalState} updateTableState={updateTableState}/>

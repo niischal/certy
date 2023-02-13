@@ -33,6 +33,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
           setStatus(STATUS.SUCCESS);
           console.log(res);
           setProgramDetails(initialState);
+          updateTableState()
         })
         .catch((err) => {
           setStatus(STATUS.ERROR);
@@ -141,7 +142,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
                 >
                   Close
                 </button>
-                <button type="submit" className="solid-btn" onClick={updateTableState}>
+                <button type="submit" className="solid-btn">
                   Add Program
                 </button>
               </div>
