@@ -58,6 +58,8 @@ router.post("/issuerLogin", (req, res) => {
   });
 });
 
+
+
 //Add a new Program
 router.post("/addProgram", async (req, res) => {
   const { currentUser, programDetails } = req.body;
@@ -75,6 +77,18 @@ router.post("/addProgram", async (req, res) => {
       res.send("Your Program has been added Successfully!");
     }
   })
+});
+
+//Get All Programs by Issuer
+router.post('/getIssuerById', async(req, res) => {
+  try{
+    const issuer = await Issuer.findById({_id: req.body.userId});
+    res.send(issuer)
+  }
+  catch(err){
+    return res.status(400).json({message:'Something went Wrong!'});
+  }
+
 });
 
 //all issuers

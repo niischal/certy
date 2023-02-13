@@ -4,7 +4,7 @@ import Error from "./Error";
 import Loader from "./Loader";
 import Success from "./Success";
 
-function AddProgramModal({ changeModalState }) {
+function AddProgramModal({ changeModalState, updateTableState }) {
   const STATUS = Object.freeze({
     IDLE: "idle",
     LOADING: "loading",
@@ -141,7 +141,7 @@ function AddProgramModal({ changeModalState }) {
                 >
                   Close
                 </button>
-                <button type="submit" className="solid-btn">
+                <button type="submit" className="solid-btn" onClick={updateTableState}>
                   Add Program
                 </button>
               </div>

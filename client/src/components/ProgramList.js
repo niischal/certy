@@ -6,7 +6,6 @@ import Loader from "./Loader";
 import Error from "./Error";
 
 function ProgramList() {
-  var i=0;
   const STATUS = Object.freeze({
     IDLE: "idle",
     LOADING: "loading",
@@ -16,10 +15,14 @@ function ProgramList() {
   const [status, setStatus] = useState(STATUS.IDLE);
   const[programs, setPrograms] = useState();
   const [modalState, setModalState] = useState(false);
+  const [tableState, setTableState] = useState(false);
   const currentUser = JSON.parse(localStorage.getItem('currentUser'))
   const userId = currentUser._id
   const changeModalState = () => {
     setModalState(!modalState);
+  };
+  const updateTableState =()=>{
+    setTableState(!tableState)
   };
   useEffect(()=>{
     const fetchPrograms = async()=>{
@@ -62,7 +65,7 @@ function ProgramList() {
           </tr>
         </thead>
         <tbody>
-         {programs && programs.map(program=>{
+         {programs && programs.map((program,i)=>{
           const initiationDate = new Date(program.dateOfProgramInitiation);
           const completionDate = new Date(program.dateOfCompletion);
           const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -79,7 +82,7 @@ function ProgramList() {
       
       {status === STATUS.ERROR && <Error error='Something went Wrong'/>}
       {modalState ? (
-        <AddProgramModal changeModalState={changeModalState} />
+        <AddProgramModal changeModalState={changeModalState} updateTableState={updateTableState}/>
       ) : (
         <></>
       )}
