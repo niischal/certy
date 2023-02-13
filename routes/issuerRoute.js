@@ -51,10 +51,16 @@ router.post("/issuerLogin", (req, res) => {
           email: docs.email,
           name: docs.name,
           address: docs.address,
+          _id: docs._id
         });
       }
     }
   });
+});
+
+//Add a new Program
+router.post('/addProgram', (req, res) => {
+  const newProgram = req.body;
 });
 
 //all issuers

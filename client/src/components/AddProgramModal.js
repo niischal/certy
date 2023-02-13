@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function AddProgramModal({ changeModalState }) {
   const initialState = {
@@ -10,7 +11,24 @@ function AddProgramModal({ changeModalState }) {
 
   const handleAddProgram = (e) => {
     e.preventDefault();
-    console.log("programDetails", programDetails);
+    if( programDetails.initiationDate <= programDetails.completionDate ){
+      const currentUserId = localStorage.getItem()
+      const newProgram = {programDetails};
+      axios
+        .post('/api/issuer/addProgram', newProgram)
+        .then((res)=>{
+          console.log(res)
+          window.location.href ='/'
+        })
+        .catch((err)=>{
+          console.log("Something went wrong.", err)
+        })
+      console.log("New Program",newProgram)
+      console.log("Program Successfully Added");
+    }
+    else{
+      console.log("Invalid Input")
+    }
   };
 
   return (
@@ -60,7 +78,7 @@ function AddProgramModal({ changeModalState }) {
                   </div>
                   <div className="col-6">
                     <label className="col-form-label">
-                      Date of Initiation:{" "}
+                      Date of Completion:{" "}
                     </label>
                   </div>
                 </div>
