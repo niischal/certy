@@ -23,7 +23,6 @@ function AddProgramModal({ changeModalState }) {
   const handleAddProgram = (e) => {
     e.preventDefault();
     if( programDetails.initiationDate <= programDetails.completionDate ){
-      setFormStatus(STATUS.SUCCESS)
       const currentUser = JSON.parse(localStorage.getItem('currentUser'));
       const newProgram = {currentUser,programDetails};
       setStatus(STATUS.LOADING)
@@ -67,7 +66,7 @@ function AddProgramModal({ changeModalState }) {
             )}
             {status === STATUS.LOADING && <Loader />}
             {status === STATUS.SUCCESS && (
-              <Success success="Your Program has been Added Successfully!" />
+              <Success success="Your Program has been Added Successfully" />
             )}
             {status === STATUS.ERROR && (
               <Error error="Somthing went wrong" />

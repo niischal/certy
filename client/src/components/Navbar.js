@@ -4,6 +4,7 @@ import { NavLink } from "react-router-dom";
 // import logo from '../images/logo192.png';
 
 const Navbar = (props) => {
+  const user = JSON.parse(localStorage.getItem('currentUser'))
   return (
     <>
       <nav className="navbar navbar-expand-lg shadow">
@@ -34,7 +35,7 @@ const Navbar = (props) => {
             <li className="nav-item">
               <NavLink className="nav-link">
                 {" "}
-                <p className="pclass">Hello,{props.name}</p>{" "}
+                <p className="pclass">Hello, {user.name} |</p>{" "}
               </NavLink>
             </li>
             <li className="nav-item">

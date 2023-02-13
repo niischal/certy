@@ -78,6 +78,18 @@ router.post('/addProgram', async(req, res) => {
   })
 });
 
+//Get all Programs by Issuer
+router.post('/getIssuerById', async(req, res) => {
+  try{
+    const issuer = await Issuer.findById({_id: req.body.userId});
+    res.send(issuer)
+  }
+  catch(err){
+    return res.status(400).json({message:'Something went Wrong!'});
+  }
+
+});
+
 //all issuers
 router.get("/allissuers", async (req, res) => {
   const allissuers = await Issuer.find();
