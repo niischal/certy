@@ -48,12 +48,12 @@ function AdminLogin() {
     <>
       <div id="div" className="container-fluid text-center ">
         <div className="row align-items-center justify-content-center">
-          <div className="col-4 m-5 p-3" id="login">
+          <div className="col-4 m-5 p-3 " id="login">
             <h2 id="p2">CERTY</h2>
             <p>Welcome Admin, Please login to your account</p>
-            <form className="row justify-content-center">
-              <div className="form-group my-3 text-start ">
-                <div className="ps-5 pe-5">
+            <form>
+              <div className="row form-group text-start justify-content-center py-2">
+                <div className="col-8">
                   <label htmlFor="username" className="form-label ">
                     Username
                   </label>
@@ -71,11 +71,8 @@ function AdminLogin() {
                   />
                 </div>
               </div>
-              <div className="form-group  my-3 text-start">
-                <div
-                  className="ps-5 pe-5"
-                  style={{ position: "relative", display: "inline-block" }}
-                >
+              <div className="row form-group py-2 text-start justify-content-center">
+                <div className="col-8 ">
                   <label htmlFor="password" className="form-label">
                     Password
                   </label>
@@ -101,8 +98,7 @@ function AdminLogin() {
               </div>
               <button
                 type="submit"
-                className="btn mt-2"
-                id="lbutton"
+                className="solid-btn col-3 my-2"
                 onClick={loginAdmin}
               >
                 Login

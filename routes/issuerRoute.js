@@ -2,9 +2,46 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Issuer = require("../models/issuerModel");
+const Certificate = require("../models/certificateModel");
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 
+const contractInfo = require("../web3");
+
+//For File Upload
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    if (!fs.existsSync("public")) {
+      fs.mkdirSync("public");
+    }
+    if (!fs.existsSync("public/certificates")) {
+      fs.mkdirSync("public/certificates");
+    }
+    callback(null, "public/certificates");
+  },
+  filename: (req, file, callback) => {
+    console.log("file.buffer", file);
+    const fileName =
+      "Certificate" +
+      "-" +
+      file.originalname.toLowerCase().split(" ").join("-");
+    callback(null, fileName);
+  },
+});
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, callback) => {
+    var ext = path.extname(file.originalname);
+    if (ext !== ".pdf" && ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg") {
+      return callback(new Error("Only pdf,jpg,png allowed"));
+    }
+    callback(null, true);
+  },
+});
+
+///Routes
 router.post("/issuerRegistrationRequest", (req, res) => {
-  console.log(req.body);
   Issuer.find(
     { email: req.body.email, issuerID: req.body.issuerID },
     (err, docs) => {
@@ -58,8 +95,6 @@ router.post("/issuerLogin", (req, res) => {
   });
 });
 
-
-
 //Add a new Program
 router.post("/addProgram", async (req, res) => {
   const { currentUser, programDetails } = req.body;
@@ -76,37 +111,57 @@ router.post("/addProgram", async (req, res) => {
     } else {
       res.send("Your Program has been added Successfully!");
     }
-  })
+  });
 });
 
 //Get All Programs by Issuer
-router.post('/getIssuerById', async(req, res) => {
-  try{
-    const issuer = await Issuer.findById({_id: req.body.userId});
-    res.send(issuer)
+router.post("/getIssuerById", async (req, res) => {
+  try {
+    const issuer = await Issuer.findById({ _id: req.body.userId });
+    res.send(issuer);
+  } catch (err) {
+    return res.status(400).json({ message: "Something went Wrong!" });
   }
-  catch(err){
-    return res.status(400).json({message:'Something went Wrong!'});
-  }
-
 });
 
-//all issuers
-router.get("/allissuers", async (req, res) => {
-  const allissuers = await Issuer.find();
-  const filteredIssuers = allissuers.filter((issuer) => issuer.addedByAdmin);
-  res.send(filteredIssuers);
-});
+//Isseu Certificate
 
-//all request
-router.get("/allrequest", async (req, res) => {
-  const allissuers = await Issuer.find();
-  const filteredIssuers = allissuers.filter((issuer) => !issuer.addedByAdmin);
-  res.send(filteredIssuers);
-});
+router.post("/issueCertificate", upload.single("file"), async (req, res) => {
+  const url = req.protocol + "://" + req.get("host");
+  const certificateUrl = url + "/public/certificates/" + req.file.filename;
 
-router.post("/acceptIssuerRequest", async (req, res) => {
-  await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true });
+  const { currentUserId } = req.body;
+  const issuer = await Issuer.findById(currentUserId);
+  const certificate = new Certificate({
+    cid: "21",
+    holderName: req.body.holderName,
+    issuer: issuer._id,
+    dateOfCertification: req.body.issuedDate,
+    programName: req.body.programName,
+  });
+  //checkin if certificate with same hash exists
+  //if no, adding to database
+  Certificate.find({ cid: certificate.cid }, async (err, docs) => {
+    if (docs.length > 0) {
+      return res.status(300).send("Certificate already Exists");
+    } else {
+      await certificate.save(async (err) => {
+        if (!err) {
+          return res.status(200).send("Certificate Added Successfully");
+        } else {
+          return res.status(400).send("Something Went Wrong");
+        }
+      });
+      // await contractInfo.contract.methods
+      //   .storeCertificate("a", "b", "c", "d", "ce")
+      //   .send({ from: issuer.address });
+    }
+  });
+  // console.log("certificate", certificate);
+  // const get = await contractInfo.contract.methods
+  //   .getCertificate(certificate.cid)
+  //   .call();
+  // console.log("get", get);
 });
 
 module.exports = router;

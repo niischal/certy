@@ -8,6 +8,11 @@ let contractInfo = require("./web3");
 let issuerRoute = require("./routes/issuerRoute");
 let adminRoute = require("./routes/adminRoute");
 app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: false,
+  })
+);
 app.use("/api/issuer", issuerRoute);
 app.use("/api/admin", adminRoute);
 app.get("/", async (req, res) => {});

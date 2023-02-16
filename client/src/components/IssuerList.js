@@ -7,7 +7,7 @@ const IssuerList = () => {
 
   useEffect(() => {
     async function getIssuers() {
-      const res = await axios.get("/api/issuer/allissuers");
+      const res = await axios.get("/api/admin/allissuers");
       setUsers(res.data);
     }
     getIssuers();

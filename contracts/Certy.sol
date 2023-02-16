@@ -16,7 +16,7 @@ contract Certy {
         bytes32 cid;
         string holderName;
         string issuerName;
-        uint timestamp;
+        string timestamp;
         string program;
         bool exist;
     }
@@ -53,18 +53,19 @@ contract Certy {
         string memory cid,
         string memory _holderName,
         string memory _issuerName,
-        string memory _program
+        string memory _program,
+        string memory _issuedDate
     ) public onlyIssuer {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
-        require(
-            Certificates[_cid].exist == false,
-            "The Certificate already exists."
-        );
+        // require(
+        //     Certificates[_cid].exist == false,
+        //     "The Certificate already exists."
+        // );
         Certificates[_cid].cid = _cid;
         Certificates[_cid].holderName = _holderName;
         Certificates[_cid].issuerName = _issuerName;
         Certificates[_cid].program = _program;
-        Certificates[_cid].timestamp = block.timestamp;
+        Certificates[_cid].timestamp = _issuedDate;
         Certificates[_cid].exist = true;
     }
 
@@ -73,7 +74,7 @@ contract Certy {
         string memory cid
     ) public view returns (Certificate memory) {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
-        require(Certificates[_cid].exist == true);
+        require(Certificates[_cid].exist == true, "Certificate Do not Exists");
         return Certificates[_cid];
     }
 
