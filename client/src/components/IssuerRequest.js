@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { TiTick } from "react-icons/ti";
 
+import getContractInfo from "../web3";
+
 const IssuerRequest = () => {
   const [users, setUsers] = useState([]);
 
@@ -14,12 +16,18 @@ const IssuerRequest = () => {
     getIssuers();
   }, [users]);
 
-  const acceptIssuerRequest = async (issuerId) => {
+  const acceptIssuerRequest = async (issuerId, address) => {
     console.log("issuerId", issuerId);
     await axios
       .post("/api/admin/acceptIssuerRequest ", { issuerId })
-      .then((res) => {
-        console.log("res", res);
+      .then(async (res) => {
+        const contract = await getContractInfo();
+        if (!contract.loading) {
+          console.log("contract", contract);
+          await contract.contract.methods
+            .addIssuer(address, issuerId.toString())
+            .send({ from: "0x855151B12fFa8189b406356D1CB7f0ae59834519" });
+        }
       })
       .catch((err) => {
         console.log("err", err);
@@ -54,7 +62,7 @@ const IssuerRequest = () => {
                     {" "}
                     <button
                       className="solid-btn mx-auto"
-                      onClick={() => acceptIssuerRequest(e._id)}
+                      onClick={() => acceptIssuerRequest(e._id, e.address)}
                     >
                       <TiTick />
                       Accept

@@ -25,10 +25,6 @@ const Signup = () => {
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const [address, setAddress] = useState("");
 
-  useEffect(() => {
-    handleConnect();
-  }, []);
-
   const register = (e) => {
     e.preventDefault();
     handleConnect();

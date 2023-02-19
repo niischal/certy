@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
+import getContractInfo from "../web3";
 
 function IssueCertificate() {
   const initialState = {
@@ -33,17 +34,6 @@ function IssueCertificate() {
   const handleFileChange = (e) => {
     let files = e.target.files[0];
     setCertificateFile(files);
-
-    // let reader = new FileReader();
-    // reader.readAsArrayBuffer(files[0]);
-    // reader.onload = (e) => {
-    //   console.log("e.target.", e.target);
-    //   setCertificateFile({
-    //     ...certificateFile,
-    //     file: files[0],
-    //     buffer: e.target.result,
-    //   });
-    // };
   };
 
   const issueCertificate = async (e) => {
@@ -62,7 +52,6 @@ function IssueCertificate() {
     );
     formData.append("programName", certificateDetails.programName);
     formData.append("issuedDate", certificateDetails.issuedDate);
-    console.log("formData", formData);
     const data = { certificateDetails, currentUser };
     try {
       console.log("certificateFile", certificateFile);
@@ -72,8 +61,24 @@ function IssueCertificate() {
             "Content-Type": "multipart/form-data",
           },
         })
-        .then((res) => {
+        .then(async (res) => {
           console.log("res", res);
+          const contract = await getContractInfo();
+          console.log("contract", contract);
+          if (!contract.loading) {
+            await contract.contract.methods
+              .storeCertificate(
+                "2",
+                certificateDetails.firstName +
+                  " " +
+                  certificateDetails.lastName,
+                currentUser._id,
+                certificateDetails.programName,
+                certificateDetails.issuedDate
+              )
+              .send({ from: currentUser.address });
+          }
+          setCertificateFile(null);
           setCertificateDetails(initialState);
         });
     } catch (error) {

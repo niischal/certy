@@ -7,8 +7,6 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 
-const contractInfo = require("../web3");
-
 //For File Upload
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
@@ -133,7 +131,7 @@ router.post("/issueCertificate", upload.single("file"), async (req, res) => {
   const { currentUserId } = req.body;
   const issuer = await Issuer.findById(currentUserId);
   const certificate = new Certificate({
-    cid: "21",
+    cid: "22",
     holderName: req.body.holderName,
     issuer: issuer._id,
     dateOfCertification: req.body.issuedDate,
@@ -147,7 +145,7 @@ router.post("/issueCertificate", upload.single("file"), async (req, res) => {
     } else {
       await certificate.save(async (err) => {
         if (!err) {
-          return res.status(200).send("Certificate Added Successfully");
+          return res.status(200).send(certificate.cid);
         } else {
           return res.status(400).send("Something Went Wrong");
         }

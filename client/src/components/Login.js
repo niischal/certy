@@ -6,6 +6,7 @@ import Error from "../components/Error";
 import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import WalletConnect from "./WalletConnect";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
   const [status, setStatus] = useState(STATUS.IDLE);
   const loginUser = async (e) => {
     e.preventDefault();
@@ -41,7 +43,7 @@ const Login = () => {
             console.log("data", data.email);
             setStatus(STATUS.SUCCESS);
             navigate("/issuer");
-            localStorage.setItem('currentUser', JSON.stringify(data))
+            localStorage.setItem("currentUser", JSON.stringify(data));
           }
         });
     } catch (error) {
@@ -93,6 +95,7 @@ const Login = () => {
             <a href="http://localhost:3000/">Forgot password?</a>
           </label>
         </ul> */}
+        <WalletConnect address={address} setAddress={setAddress} />
         <ul className="ulclass">
           <li>
             <Link id="loginlink">
