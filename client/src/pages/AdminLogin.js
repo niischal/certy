@@ -89,7 +89,8 @@ function AdminLogin() {
                     }
                   />
                   <span
-                    className="password-toggle-icons"
+                    // className="password-toggle-icons"
+                    className="position-absolute translate-middle" style={{ left: "58%", top: "57%" }}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
