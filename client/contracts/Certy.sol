@@ -35,7 +35,18 @@ contract Certy {
         require(issuers[msg.sender].exists == true, "Not Issuer");
         _;
     }
-
+    //Events
+    event IssuerAdded(
+        string isserId,
+        address issuerAddress
+    );
+    event CertificateAdded(
+        string cid,
+        string holderName,
+        string issuerName,
+        string issuedDate,
+        string program
+    );
     //function
 
     //function to add an issuer
@@ -46,6 +57,7 @@ contract Certy {
         issuers[_issuerAddress].issuerAddress = _issuerAddress;
         issuers[_issuerAddress].id = _issuerId;
         issuers[_issuerAddress].exists = true;
+        emit IssuerAdded(_issuerId, _issuerAddress);
     }
 
     //Stores Certificate CID and details.
@@ -67,6 +79,7 @@ contract Certy {
         Certificates[_cid].program = _program;
         Certificates[_cid].timestamp = _issuedDate;
         Certificates[_cid].exist = true;
+        emit CertificateAdded(cid, _holderName, _issuerName, _issuedDate, _program);
     }
 
     //Get Certificate details from cid
