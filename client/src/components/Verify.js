@@ -1,16 +1,42 @@
-import React, { useState, useRef } from "react";
+import React, { useState} from "react";
+import Sha256 from '../Sha256';
 
 const Verify = () => {
   const [file, setFile] = useState(null);
+  //const [hash, setHash] = useState();
+  const [buffer, setBuffer] = useState();
+
   const handleDragOver = (event) => {
     event.preventDefault();
   };
   const handleDrop = (event) => {
     event.preventDefault();
-    setFile(event.dataTransfer.files);
-    console.log(file);
+    const file = event.dataTransfer.files[0];
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload =()=>{
+      const buffer = reader.result;
+      setBuffer(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+    }
+
   };
-  const inputRef = useRef();
+  
+  const handleFileInput =(event) =>{
+    const file = event.target.files[0];
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload =()=>{
+      const buffer = reader.result;
+      setBuffer(String.fromCharCode.apply(null, new Uint8Array(buffer)));
+    }
+      
+  }
+  const hash = Sha256.hash(buffer)
+  console.log(hash)
   return (
     <>
       {!file && (
@@ -18,14 +44,13 @@ const Verify = () => {
           className="col verify-box"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          onDoubleClick={() => inputRef.current.click()}
+          onDoubleClick={() => {
+            const fileInput = document.createElement("input");
+            fileInput.type = "file";
+            fileInput.click();
+            fileInput.onchange = handleFileInput;
+          }}
         >
-          <input
-            type="file"
-            onChange={(e) => setFile(e.target.files)}
-            hidden
-            ref={inputRef}
-          />
           <h1 id="p1">Drag Certificate to Verify</h1>
           <h1>or</h1>
           <h1>Double click to select</h1>
@@ -33,7 +58,8 @@ const Verify = () => {
       )}
       {file && (
         <div className="col verify-box">
-          {file[0].name} ({file[0].size} bytes)
+          {/* {file[0].name} ({file[0].size} bytes) */}
+          {hash}
         </div>
       )}
     </>
