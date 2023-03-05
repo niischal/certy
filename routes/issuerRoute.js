@@ -122,7 +122,7 @@ router.post("/getIssuerById", async (req, res) => {
   }
 });
 
-//Isseu Certificate
+//Issue Certificate
 
 router.post("/issueCertificate", upload.single("file"), async (req, res) => {
   const url = req.protocol + "://" + req.get("host");
@@ -131,11 +131,12 @@ router.post("/issueCertificate", upload.single("file"), async (req, res) => {
   const { currentUserId } = req.body;
   const issuer = await Issuer.findById(currentUserId);
   const certificate = new Certificate({
-    cid: "22",
+    cid: req.body.cid,
     holderName: req.body.holderName,
     issuer: issuer._id,
     dateOfCertification: req.body.issuedDate,
     programName: req.body.programName,
+    url: certificateUrl,
   });
   //checkin if certificate with same hash exists
   //if no, adding to database

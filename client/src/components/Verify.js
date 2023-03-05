@@ -1,12 +1,13 @@
-import React, { useState} from "react";
-import Sha256 from '../Sha256';
+import React, { useState } from "react";
+import Sha256 from "../Sha256";
 import FileBuffer from "../FIleBuffer";
+import getContractInfo from "../web3";
 
 const Verify = () => {
   const [file, setFile] = useState(null);
   //const [hash, setHash] = useState();
   const [fileBufferHash, setFileBufferHash] = useState();
-
+  const [result, setResult] = useState();
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -15,13 +16,12 @@ const Verify = () => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     setFile(file);
-
   };
-  const handleFileInput =(event) =>{
+  const handleFileInput = (event) => {
     const file = event.target.files[0];
     setFile(file);
-  }
-  const BufferString = async()=>{
+  };
+  const BufferString = async () => {
     try {
       const fileBuffer = await FileBuffer.buffer(file);
       const hash = Sha256.hash(fileBuffer);
@@ -29,10 +29,20 @@ const Verify = () => {
     } catch (error) {
       console.error(error);
     }
-  }
-  if(file){
+  };
+  if (file) {
     BufferString();
   }
+  const handleVerify = async () => {
+    const contract = await getContractInfo();
+    if (!contract.loading) {
+      const result = await contract.contract.methods
+        .check(fileBufferHash)
+        .call();
+      setResult(result);
+    }
+    console.log("result", result);
+  };
   return (
     <>
       {!file && (
@@ -56,6 +66,9 @@ const Verify = () => {
         <div className="col verify-box">
           {/* {file[0].name} ({file[0].size} bytes) */}
           {fileBufferHash}
+          <button className="solid-btn" onClick={handleVerify}>
+            Verify
+          </button>
         </div>
       )}
     </>

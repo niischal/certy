@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.css";
 import axios from "axios";
 import getContractInfo from "../web3";
+import Sha256 from "../Sha256";
+import FileBuffer from "../FIleBuffer";
 
 function IssueCertificate() {
   const initialState = {
@@ -13,7 +15,7 @@ function IssueCertificate() {
   const [certificateDetails, setCertificateDetails] = useState(initialState);
   const [programs, setPrograms] = useState(null);
   const [certificateFile, setCertificateFile] = useState("");
-
+  const [fileBufferHash, setFileBufferHash] = useState();
   useEffect(() => {
     fetchPrograms();
   }, []);
@@ -35,13 +37,27 @@ function IssueCertificate() {
     let files = e.target.files[0];
     setCertificateFile(files);
   };
-
+  const BufferString = async () => {
+    try {
+      const fileBuffer = await FileBuffer.buffer(certificateFile);
+      const hash = Sha256.hash(fileBuffer);
+      setFileBufferHash(hash);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const issueCertificate = async (e) => {
     e.preventDefault();
     if (!certificateFile) {
-      console.log("certificateFile", certificateFile);
+      console.log("no file chosen");
       return;
     }
+    if (certificateFile.size > 102400) {
+      console.log("file exceeds limit");
+      return;
+    }
+    BufferString();
+
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const formData = new FormData();
     formData.append("file", certificateFile);
@@ -52,6 +68,8 @@ function IssueCertificate() {
     );
     formData.append("programName", certificateDetails.programName);
     formData.append("issuedDate", certificateDetails.issuedDate);
+    formData.append("cid", fileBufferHash);
+    console.log("fileBufferHash", fileBufferHash);
     const data = { certificateDetails, currentUser };
     try {
       console.log("certificateFile", certificateFile);
@@ -68,7 +86,7 @@ function IssueCertificate() {
           if (!contract.loading) {
             await contract.contract.methods
               .storeCertificate(
-                "2",
+                fileBufferHash,
                 certificateDetails.firstName +
                   " " +
                   certificateDetails.lastName,

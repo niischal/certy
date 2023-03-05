@@ -9,12 +9,19 @@ const certificateSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  issuer: {},
+  issuer: {
+    type: mongoose.Schema.Types.ObjectId,
+    require: true,
+  },
   dateOfCertification: {
     type: Date,
     require: true,
   },
   programName: {
+    type: String,
+    require: true,
+  },
+  url: {
     type: String,
     require: true,
   },
