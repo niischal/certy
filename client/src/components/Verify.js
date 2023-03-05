@@ -1,10 +1,12 @@
 import React, { useState} from "react";
 import Sha256 from '../Sha256';
+import FileBuffer from "../FIleBuffer";
 
 const Verify = () => {
   const [file, setFile] = useState(null);
   //const [hash, setHash] = useState();
-  const [buffer, setBuffer] = useState();
+  const [fileBufferHash, setFileBufferHash] = useState();
+
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -14,29 +16,23 @@ const Verify = () => {
     const file = event.dataTransfer.files[0];
     setFile(file);
 
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload =()=>{
-      const buffer = reader.result;
-      setBuffer(String.fromCharCode.apply(null, new Uint8Array(buffer)));
-    }
-
   };
-  
   const handleFileInput =(event) =>{
     const file = event.target.files[0];
     setFile(file);
-
-    const reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload =()=>{
-      const buffer = reader.result;
-      setBuffer(String.fromCharCode.apply(null, new Uint8Array(buffer)));
-    }
-      
   }
-  const hash = Sha256.hash(buffer)
-  console.log(hash)
+  const BufferString = async()=>{
+    try {
+      const fileBuffer = await FileBuffer.buffer(file);
+      const hash = Sha256.hash(fileBuffer);
+      setFileBufferHash(hash);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  if(file){
+    BufferString();
+  }
   return (
     <>
       {!file && (
@@ -59,7 +55,7 @@ const Verify = () => {
       {file && (
         <div className="col verify-box">
           {/* {file[0].name} ({file[0].size} bytes) */}
-          {hash}
+          {fileBufferHash}
         </div>
       )}
     </>
