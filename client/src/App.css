@@ -149,6 +149,9 @@ font-size: 6.5px;
   background: #00ADAD;
   border-radius:  0px 24px   24px 0px ;
 }
+.verify-box h4{
+  color: white;
+}
 .i-login{
   background: White;
   border-radius: 24px 0px  0px 24px;
