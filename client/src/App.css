@@ -251,3 +251,34 @@ background-color: #00ADAD;
   border-radius: 5px;
   padding: 7px;
 }
+
+/*verifyResult*/
+.container-rounded {
+  border-radius: 20px;
+  border: 1px solid #ced4da;
+  width: 75%;
+}
+.upper-part {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #00ADAD;
+  border-radius: 20px 20px 0 0;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.verified-section {
+  align-items: center;
+}
+
+.my-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #00FF00;
+  color: white;
+  border-radius: 10px;
+}
+.lower-part{
+  color: rgb(102, 102, 102);
+}
