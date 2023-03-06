@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sha256 from "../Sha256";
 import FileBuffer from "../FIleBuffer";
 import getContractInfo from "../web3";
@@ -8,6 +8,7 @@ const Verify = () => {
   //const [hash, setHash] = useState();
   const [fileBufferHash, setFileBufferHash] = useState();
   const [result, setResult] = useState();
+  const [sizeError, setSizeError] = useState(false);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -30,9 +31,15 @@ const Verify = () => {
       console.error(error);
     }
   };
-  if (file) {
-    BufferString();
-  }
+  useEffect(() => {
+    if (file && file.size > 102400) {
+      console.log('file limit exceeds')
+      setSizeError(true);
+    } else if (file > 102400){
+      BufferString();
+    }
+  }, [file]);  
+  
   const handleVerify = async () => {
     const contract = await getContractInfo();
     if (!contract.loading) {
@@ -43,9 +50,10 @@ const Verify = () => {
     }
     console.log("result", result);
   };
+  console.log(sizeError)
   return (
     <>
-      {!file && (
+      {!file && !sizeError && (
         <div
           className="col verify-box"
           onDragOver={handleDragOver}
@@ -62,7 +70,7 @@ const Verify = () => {
           <h1>Double click to select</h1>
         </div>
       )}
-      {file && (
+      {file && !sizeError && (
         <div className="col verify-box">
           {/* {file[0].name} ({file[0].size} bytes) */}
           {fileBufferHash}
@@ -71,6 +79,12 @@ const Verify = () => {
           </button>
         </div>
       )}
+      {sizeError &&(
+        <div className="col verify-box">
+          <h4>File Size Limit Exceeded!</h4>
+        </div>
+      )}
+      
     </>
   );
 };
