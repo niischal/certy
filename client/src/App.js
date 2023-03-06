@@ -5,6 +5,7 @@ import CertyIssuer from "./pages/CertyIssuer";
 import Signup from "./pages/Signup";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AdminLogin from "./pages/AdminLogin";
+import VerifyResult from "./pages/VerifyResult";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/admin/*" element={<CertyAdmin />} />
         <Route path="/issuer" element={<CertyIssuer />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/verificationResult/:cid" element={<VerifyResult />} />
       </Routes>
     </Router>
   );
