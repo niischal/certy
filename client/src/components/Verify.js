@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sha256 from "../Sha256";
 import FileBuffer from "../FIleBuffer";
-import getContractInfo from "../web3";
+import { Link } from "react-router-dom";
 
 const Verify = () => {
   const [file, setFile] = useState(null);
   //const [hash, setHash] = useState();
   const [fileBufferHash, setFileBufferHash] = useState();
-  const [result, setResult] = useState();
+
   const [sizeError, setSizeError] = useState(false);
 
   const handleDragOver = (event) => {
@@ -32,25 +32,28 @@ const Verify = () => {
     }
   };
   useEffect(() => {
+    console.log("file", file);
     if (file && file.size > 102400) {
-      console.log('file limit exceeds')
+      console.log("file limit exceeds");
       setSizeError(true);
-    } else if (file > 102400){
+    } else if (file && file.size < 102400) {
+      console.log("file", file);
+      console.log("fileBufferHash", fileBufferHash);
       BufferString();
     }
-  }, [file]);  
-  
-  const handleVerify = async () => {
-    const contract = await getContractInfo();
-    if (!contract.loading) {
-      const result = await contract.contract.methods
-        .check(fileBufferHash)
-        .call();
-      setResult(result);
-    }
-    console.log("result", result);
-  };
-  console.log(sizeError)
+  }, [file]);
+
+  // const handleVerify = async () => {
+  //   const contract = await getContractInfo();
+  //   if (!contract.loading) {
+  //     const result = await contract.contract.methods
+  //       .check(fileBufferHash)
+  //       .call();
+  //     setResult(result);
+  //   }
+  //   console.log("result", result);
+  // };
+  // console.log(sizeError);
   return (
     <>
       {!file && !sizeError && (
@@ -74,17 +77,16 @@ const Verify = () => {
         <div className="col verify-box">
           {/* {file[0].name} ({file[0].size} bytes) */}
           {fileBufferHash}
-          <button className="solid-btn" onClick={handleVerify}>
-            Verify
-          </button>
+          <Link to={`/verificationResult/${fileBufferHash}`}>
+            <button className="solid-btn">Verify</button>
+          </Link>
         </div>
       )}
-      {sizeError &&(
+      {sizeError && (
         <div className="col verify-box">
           <h4>File Size Limit Exceeded!</h4>
         </div>
       )}
-      
     </>
   );
 };
