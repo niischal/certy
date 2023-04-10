@@ -11,6 +11,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
     SUCCESS: "success",
     ERROR: "error",
   });
+  const [isChecked, setIsChecked] = useState(false);
   const [status, setStatus] = useState(STATUS.IDLE);
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const initialState = {
@@ -134,6 +135,10 @@ function AddProgramModal({ changeModalState, updateTableState }) {
                   </div>
                 </div>
               </div>
+              <label style={{marginLeft:"20px"}}>
+              <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                Please read all the details carefully before checking the checkbox.
+              </label>
               <div className="modal-footer">
                 <button
                   type="button"
@@ -142,7 +147,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
                 >
                   Close
                 </button>
-                <button type="submit" className="solid-btn">
+                <button type="submit" className="solid-btn" disabled={!isChecked}>
                   Add Program
                 </button>
               </div>
