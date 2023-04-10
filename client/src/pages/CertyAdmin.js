@@ -2,25 +2,22 @@ import React from "react";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import IssuerList from "../components/IssuerList";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import AdminHome from "../components/AdminHome";
 import IssuerRequest from "../components/IssuerRequest";
-import IssueCertificate from "../components/IssueCertificate";
-import ProgramList from "../components/ProgramList";
 
 const CertyAdmin = () => {
+  const admin = JSON.parse(localStorage.getItem("admin"))
   return (
     <>
       <Navbar name="Admin" />
       <div className="main-container" style={{ display: "flex" }}>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<AdminHome />} />
-          <Route exact path="/" element={<AdminHome />} />
-          <Route path="/issuerList" element={<IssuerList />} />
-          <Route path="/issuerRequest" element={<IssuerRequest />} />
-          <Route path="/programList" element={<ProgramList />} />
-          <Route path="/issueCertificate" element={<IssueCertificate />} />
+          <Route path="/" element={admin ? <AdminHome /> : <Navigate to='/'/>} />
+          <Route exact path="/" element={admin ? <AdminHome /> : <Navigate to='/'/>} />
+          <Route path="/issuerList" element={admin ? <IssuerList />: <Navigate to='/'/>} />
+          <Route path="/issuerRequest" element={admin? <IssuerRequest />: <Navigate to='/'/>} />
         </Routes>
       </div>
     </>

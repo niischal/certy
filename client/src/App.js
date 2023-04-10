@@ -9,14 +9,15 @@ import VerifyResult from "./pages/VerifyResult";
 
 function App() {
   const user = JSON.parse(localStorage.getItem('currentUser'))
+  const admin = JSON.parse(localStorage.getItem('admin'))
   return (
     <Router>
       <Routes>
-        <Route path="/" element={!user ? <Home /> : <Navigate to='/issuer'/>} />
-        <Route path="/adminLogin" element={<AdminLogin />} />
-        <Route path="/admin/*" element={<CertyAdmin />} />
-        <Route path="/issuer" element={user ? <CertyIssuer />: <Navigate to='/'/>} />
-        <Route path="/signup" element={!user ? <Signup /> : <Navigate to='/issuer'/>} />
+        <Route path="/" element={!user && !admin ? <Home /> : <Navigate to={admin? '/admin': '/isser'}/>} />
+        <Route path="/adminLogin" element={!admin && !user ? <AdminLogin />: <Navigate to='/admin'/>} />
+        <Route path="/admin/*" element={admin? <CertyAdmin />: <Navigate to ={user ? '/issuer' : '/adminLogin'}/>} />
+        <Route path="/issuer/*" element={user ? <CertyIssuer />: <Navigate to={admin ? '/admin': '/issuer'}/>} />
+        <Route path="/signup" element={!user && !admin ? <Signup /> : <Navigate to={admin? '/admin': '/login'}/>} />
         <Route path="/verificationResult/:cid" element={<VerifyResult />} />
       </Routes>
     </Router>

@@ -37,6 +37,8 @@ function AdminLogin() {
           console.log("data", data);
           console.log(status);
           navigate("/admin");
+          localStorage.setItem("admin", JSON.stringify(data));
+          window.location.href = '/admin'
         }
       });
     } catch {
