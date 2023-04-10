@@ -44,6 +44,7 @@ const Login = () => {
             setStatus(STATUS.SUCCESS);
             navigate("/issuer");
             localStorage.setItem("currentUser", JSON.stringify(data));
+            window.location.reload()
           }
         });
     } catch (error) {
