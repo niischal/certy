@@ -80,6 +80,10 @@ router.post("/issuerLogin", (req, res) => {
         return res.status(401).json({ message: "Invalid Credentials" });
       } else if (docs.addedByAdmin === false) {
         return res.status(401).json({ message: "Not verified by Admin" });
+      } else if (docs.address !== req.body.address) {
+        return res
+          .status(401)
+          .json({ message: "Wallet Address does not match" });
       } else {
         return res.status(200).json({
           message: "Login Successful",

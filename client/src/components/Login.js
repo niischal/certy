@@ -16,6 +16,7 @@ const Login = () => {
     SUCCESS: "success",
     ERROR: "error",
   });
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,30 +27,39 @@ const Login = () => {
     setStatus(STATUS.LOADING);
     if (!email || !password) {
       setStatus(STATUS.ERROR);
+      setMsg("Empty Fields");
       return;
     }
-    try {
-      axios
-        .post("/api/issuer/issuerLogin", {
-          email,
-          password,
-        })
-        .then((res) => {
-          console.log("res.data", res.data);
-          const data = res.data;
-          if (!data) {
-            setStatus(STATUS.ERROR);
-          } else {
-            console.log("data", data.email);
-            setStatus(STATUS.SUCCESS);
-            navigate("/issuer");
-            localStorage.setItem("currentUser", JSON.stringify(data));
-            window.location.reload()
-          }
-        });
-    } catch (error) {
+    if (!address) {
       setStatus(STATUS.ERROR);
+      setMsg("Wallet not Connected");
+      return;
     }
+    axios
+      .post("/api/issuer/issuerLogin", {
+        email,
+        password,
+        address,
+      })
+      .then((res) => {
+        console.log("res.data", res.data);
+        const data = res.data;
+        if (!data) {
+          setStatus(STATUS.ERROR);
+          setMsg(res.data.message);
+        } else {
+          console.log("data", data.email);
+          setStatus(STATUS.SUCCESS);
+          navigate("/issuer");
+          localStorage.setItem("currentUser", JSON.stringify(data));
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        setStatus(STATUS.ERROR);
+        console.log("first", err.response.data.message);
+        setMsg(err.response.data.message);
+      });
   };
 
   return (
@@ -111,7 +121,7 @@ const Login = () => {
             {status === STATUS.SUCCESS && (
               <Success success="Login Succesfully" />
             )}
-            {status === STATUS.ERROR && <Error error="Invalid Credentials" />}
+            {status === STATUS.ERROR && <Error error={msg} />}
           </li>
         </ul>
       </form>
