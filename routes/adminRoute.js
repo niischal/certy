@@ -13,12 +13,14 @@ router.post("/adminLogin", (req, res) => {
         console.log("err", err);
       }
       if (!docs) {
-        return res.status(401).json({ message: "Invalid Credentials" });
+        return res.status(401).json({ msg: "Invalid Credentials" });
       } else {
         if (docs.password !== req.body.adminLoginDetails.password) {
-          return res.status(401).json({ message: "Invalid Credentials" });
+          return res.status(401).json({ msg: "Invalid Credentials" });
+        } else if (docs.address !== req.body.adminLoginDetails.address) {
+          return res.status(401).json({ msg: "Wallet Address does not match" });
         } else {
-          return res.status(200).json({ message: "Login Successful", adminId: docs._id  });
+          return res.status(200).json({ message: "Login Successful", adminId: docs._id });
         }
       }
     }
@@ -30,10 +32,10 @@ router.use(requireAdmin)
 router.post("/acceptIssuerRequest", async (req, res) => {
   await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true })
     .then(() => {
-      return res.status(200).json({ message: "Successfully added" });
+      return res.status(200).json({ msg: "Successfully added" });
     })
     .catch((err) => {
-      return res.status(300).json({ message: "Something Went Wrong" });
+      return res.status(300).json({ msg: "Something Went Wrong" });
     });
 });
 

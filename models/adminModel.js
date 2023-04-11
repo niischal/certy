@@ -9,6 +9,10 @@ const adminSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  address: {
+    type: String,
+    require: true,
+  },
 });
 
 const Admin = mongoose.model("admins", adminSchema);

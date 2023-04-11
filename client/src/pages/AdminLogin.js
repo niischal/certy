@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-
+import Success from "../components/Success";
+import Error from "../components/Error";
+import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
+import WalletConnect from "../components/WalletConnect";
 
 function AdminLogin() {
   const STATUS = Object.freeze({
@@ -12,23 +15,42 @@ function AdminLogin() {
     ERROR: "error",
   });
   const [status, setStatus] = useState(STATUS.IDLE);
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const [address, setAddress] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [adminLoginDetails, setAdminLoginDetails] = useState({
     username: "",
     password: "",
+    address: "",
   });
 
-  const loginAdmin = (e) => {
+  useEffect(() => {
+    setAdminLoginDetails({
+      ...adminLoginDetails,
+      address: address,
+    });
+  }, [address]);
+
+  const loginAdmin = async (e) => {
     e.preventDefault();
     console.log("adminLoginDetails", adminLoginDetails);
     setStatus(STATUS.LOADING);
     if (!adminLoginDetails.username || !adminLoginDetails.password) {
       setStatus(STATUS.ERROR);
+      setMsg("Username or password is empty");
       return;
     }
-    try {
-      axios.post("/api/admin/adminLogin", { adminLoginDetails }).then((res) => {
+    if (!adminLoginDetails.address) {
+      setStatus(STATUS.ERROR);
+      setMsg("Wallet not connected");
+      return;
+    }
+
+    await axios
+      .post("/api/admin/adminLogin", { adminLoginDetails })
+      .then((res) => {
+        console.log("res.message", res);
         const data = res.data;
         if (!data) {
           setStatus(STATUS.ERROR);
@@ -38,13 +60,13 @@ function AdminLogin() {
           console.log(status);
           navigate("/admin");
           localStorage.setItem("admin", JSON.stringify(data));
-          window.location.href = '/admin'
+          window.location.href = "/admin";
         }
+      })
+      .catch((err) => {
+        setStatus(STATUS.ERROR);
+        setMsg(err.response.data.msg);
       });
-    } catch {
-      setStatus(STATUS.ERROR);
-      console.log("status", status);
-    }
   };
   return (
     <>
@@ -92,12 +114,25 @@ function AdminLogin() {
                   />
                   <span
                     // className="password-toggle-icons"
-                    className="position-absolute translate-middle" style={{ left: "58%", top: "57%" }}
+                    className="position-absolute translate-middle"
+                    style={{ left: "58%", top: "57%" }}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
+              </div>
+              <div className="row ">
+                <div className="">
+                  <WalletConnect address={address} setAddress={setAddress} />
+                </div>
+              </div>
+              <div className="mt-3">
+                {status === STATUS.LOADING && <Loader />}
+                {status === STATUS.SUCCESS && (
+                  <Success success="Login Succesfully" />
+                )}
+                {status === STATUS.ERROR && <Error error={msg} />}
               </div>
               <button
                 type="submit"
