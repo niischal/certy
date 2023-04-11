@@ -10,11 +10,15 @@ const Navbar = (props) => {
   const handleLogout = () =>{
     if(user){
       localStorage.removeItem('currentUser')
+      window.location.href = '/'
+      return
     }
     if(admin){
       localStorage.removeItem('admin')
+      window.location.href = '/adminLogin'
+      return
     }
-    window.location.reload()
+    
   }
   return (
     <>
@@ -50,7 +54,7 @@ const Navbar = (props) => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/"  onClick={()=>{handleLogout()}}>
+              <NavLink className="nav-link" to="/"  onClick={handleLogout}>
                 <p className="pclass">Log Out</p>{" "}
                 
               </NavLink>
