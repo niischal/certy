@@ -96,14 +96,14 @@ function AdminLogin() {
                 </div>
               </div>
               <div className="row form-group py-2 text-start justify-content-center">
-                <div className="col-8 ">
+                <div className="col-8 " style={{ position: "relative" }}>
                   <label htmlFor="password" className="form-label">
                     Password
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
                     className="form-control"
-                    placeholder="********"
+                    placeholder="Password"
                     required
                     onChange={(e) =>
                       setAdminLoginDetails({
@@ -113,9 +113,14 @@ function AdminLogin() {
                     }
                   />
                   <span
-                    // className="password-toggle-icons"
-                    className="position-absolute translate-middle"
-                    style={{ left: "58%", top: "57%" }}
+                  style={{
+                    position: "absolute",
+                    top: "70%",
+                    right: "1rem",
+                    transform: "translateY(-50%)",
+                    cursor: "pointer"
+                  }}
+
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}

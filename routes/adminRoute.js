@@ -38,6 +38,16 @@ router.post("/acceptIssuerRequest", async (req, res) => {
       return res.status(300).json({ msg: "Something Went Wrong" });
     });
 });
+//Issuer Reject
+router.post("/rejectIssuerRequest", async(req, res) => {
+  await Issuer.findByIdAndDelete(req.body.issuerId)
+  .then(() =>{
+    return res.status(200).json({ msg: "Issuer rejected" });
+  })
+  .catch((err) => {
+    return res.status(300).json({ msg: "Something Went Wrong" });
+  });
+});
 
 //all issuers
 router.get("/allissuers", async (req, res) => {

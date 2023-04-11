@@ -254,6 +254,14 @@ background-color: #00ADAD;
   border-radius: 5px;
   padding: 7px;
 }
+.reject-btn{
+  background:gray;
+  border: none;
+  color: white;
+  /* width: 100px; */
+  border-radius: 5px;
+  padding: 7px;
+}
 
 /*verifyResult*/
 .container-rounded {

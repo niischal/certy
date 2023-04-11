@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { TiTick } from "react-icons/ti";
+import { TiTick, TiCancel } from "react-icons/ti";
 
 import getContractInfo from "../web3";
 
@@ -21,6 +21,16 @@ const IssuerRequest = () => {
     }
     getIssuers();
   }, [users]);
+  //code change
+  const rejectIssuerRequest = async (issuerId, address) => {
+    console.log("delete id:", issuerId);
+    await axios
+    .post("/api/admin/rejectIssuerRequest", {issuerId},{
+      headers: {
+        adminId: adminId
+      }
+    })
+  }
 
   const acceptIssuerRequest = async (issuerId, address) => {
     console.log("issuerId", issuerId);
@@ -77,6 +87,13 @@ const IssuerRequest = () => {
                       <TiTick />
                       Accept
                     </button>{" "}
+                    <button
+                      className="reject-btn mx-auto"
+                      onClick={() => rejectIssuerRequest(e._id, e.address)}
+                    >
+                      <TiCancel/>
+                      Reject
+                    </button>
                   </td>
                 </tr>
               );
