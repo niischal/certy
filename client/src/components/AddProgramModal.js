@@ -29,7 +29,11 @@ function AddProgramModal({ changeModalState, updateTableState }) {
       const newProgram = {currentUser,programDetails};
       setStatus(STATUS.LOADING)
       axios
-        .post("/api/issuer/addProgram", newProgram)
+        .post("/api/issuer/addProgram", newProgram, {
+          headers:{
+            issuerId: currentUser._id
+          }
+        })
         .then((res) => {
           setStatus(STATUS.SUCCESS);
           console.log(res);

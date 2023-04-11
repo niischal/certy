@@ -24,7 +24,11 @@ function IssueCertificate() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const userId = currentUser._id;
     await axios
-      .post("/api/issuer/getIssuerById", { userId })
+      .post("/api/issuer/getIssuerById", { userId }, {
+        headers:{
+          isserId: userId
+        }
+      })
       .then((res) => {
         setPrograms(res.data.programs);
       })

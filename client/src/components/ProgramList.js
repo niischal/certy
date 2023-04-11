@@ -28,7 +28,11 @@ function ProgramList() {
     const fetchPrograms = async ()=>{
       setStatus(STATUS.LOADING)
       await axios
-      .post('/api/issuer/getIssuerById', {userId})
+      .post('/api/issuer/getIssuerById', {userId}, {
+        headers: {
+          issuerId: userId
+        }
+      })
       .then((res)=>{
         setStatus(STATUS.SUCCESS)
         setPrograms(res.data.programs)

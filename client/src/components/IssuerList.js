@@ -4,10 +4,16 @@ import axios from "axios";
 
 const IssuerList = () => {
   const [users, setUsers] = useState([]);
+  const admin = JSON.parse(localStorage.getItem("admin"))
+  const adminId = admin.adminId
 
   useEffect(() => {
     async function getIssuers() {
-      const res = await axios.get("/api/admin/allissuers");
+      const res = await axios.get("/api/admin/allissuers", {
+        headers:{
+          adminId: adminId
+        }
+      });
       setUsers(res.data);
     }
     getIssuers();

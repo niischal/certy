@@ -13,7 +13,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={!user && !admin ? <Home /> : <Navigate to={admin? '/admin': '/isser'}/>} />
+        <Route path="/" element={!user && !admin ? <Home /> : <Navigate to={admin? '/admin': '/issuer'}/>} />
         <Route path="/adminLogin" element={!admin && !user ? <AdminLogin />: <Navigate to='/admin'/>} />
         <Route path="/admin/*" element={admin? <CertyAdmin />: <Navigate to ={user ? '/issuer' : '/adminLogin'}/>} />
         <Route path="/issuer/*" element={user ? <CertyIssuer />: <Navigate to={admin ? '/admin': '/issuer'}/>} />

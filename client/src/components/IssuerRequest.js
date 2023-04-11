@@ -7,10 +7,16 @@ import getContractInfo from "../web3";
 
 const IssuerRequest = () => {
   const [users, setUsers] = useState([]);
+  const admin = JSON.parse(localStorage.getItem("admin"))
+  const adminId = admin.adminId
 
   useEffect(() => {
     async function getIssuers() {
-      const res = await axios.get("/api/admin/allrequest");
+      const res = await axios.get("/api/admin/allrequest", {
+        headers:{
+          adminId: adminId
+        }
+      });
       setUsers(res.data);
     }
     getIssuers();
@@ -19,7 +25,11 @@ const IssuerRequest = () => {
   const acceptIssuerRequest = async (issuerId, address) => {
     console.log("issuerId", issuerId);
     await axios
-      .post("/api/admin/acceptIssuerRequest ", { issuerId })
+      .post("/api/admin/acceptIssuerRequest ", { issuerId }, {
+        headers: {
+          adminId: adminId
+        }
+      })
       .then(async (res) => {
         const contract = await getContractInfo();
         if (!contract.loading) {

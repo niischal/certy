@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Admin = require("../models/adminModel");
 const Issuer = require("../models/issuerModel");
+const requireAdmin = require('../middleware/requireAdmin')
 
 router.post("/adminLogin", (req, res) => {
   Admin.findOne(
@@ -17,12 +18,14 @@ router.post("/adminLogin", (req, res) => {
         if (docs.password !== req.body.adminLoginDetails.password) {
           return res.status(401).json({ message: "Invalid Credentials" });
         } else {
-          return res.status(200).json({ message: "Login Successful" });
+          return res.status(200).json({ message: "Login Successful", adminId: docs._id  });
         }
       }
     }
   );
 });
+
+router.use(requireAdmin)
 
 router.post("/acceptIssuerRequest", async (req, res) => {
   await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true })

@@ -6,6 +6,7 @@ const Certificate = require("../models/certificateModel");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const requireAuth = require('../middleware/requireAuth')
 
 //For File Upload
 const storage = multer.diskStorage({
@@ -93,8 +94,10 @@ router.post("/issuerLogin", (req, res) => {
   });
 });
 
+router.use(requireAuth)
+
 //Add a new Program
-router.post("/addProgram", async (req, res) => {
+router.post("/addProgram", requireAuth, async (req, res) => {
   const { currentUser, programDetails } = req.body;
   const issuer = await Issuer.findOne({ _id: currentUser._id });
   const newProgram = {
