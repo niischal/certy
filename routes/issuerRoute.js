@@ -6,7 +6,7 @@ const Certificate = require("../models/certificateModel");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
-const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require("../middleware/requireAuth");
 
 //For File Upload
 const storage = multer.diskStorage({
@@ -98,7 +98,7 @@ router.post("/issuerLogin", (req, res) => {
   });
 });
 
-router.use(requireAuth)
+router.use(requireAuth);
 
 //Add a new Program
 router.post("/addProgram", requireAuth, async (req, res) => {
@@ -145,17 +145,17 @@ router.post("/issueCertificate", upload.single("file"), async (req, res) => {
     programName: req.body.programName,
     url: certificateUrl,
   });
-  //checkin if certificate with same hash exists
+  //checking if certificate with same hash exists
   //if no, adding to database
   Certificate.find({ cid: certificate.cid }, async (err, docs) => {
     if (docs.length > 0) {
-      return res.status(300).send("Certificate already Exists");
+      return res.status(400).send({ message: "Certificate already Exists" });
     } else {
       await certificate.save(async (err) => {
         if (!err) {
           return res.status(200).send(certificate.cid);
         } else {
-          return res.status(400).send("Something Went Wrong");
+          return res.status(400).send({ message: "Something Went Wrong" });
         }
       });
       // await contractInfo.contract.methods

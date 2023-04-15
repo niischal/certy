@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Admin = require("../models/adminModel");
 const Issuer = require("../models/issuerModel");
-const requireAdmin = require('../middleware/requireAdmin')
+const requireAdmin = require("../middleware/requireAdmin");
 
 router.post("/adminLogin", (req, res) => {
   Admin.findOne(
@@ -20,14 +20,20 @@ router.post("/adminLogin", (req, res) => {
         } else if (docs.address !== req.body.adminLoginDetails.address) {
           return res.status(401).json({ msg: "Wallet Address does not match" });
         } else {
-          return res.status(200).json({ message: "Login Successful", adminId: docs._id });
+          return res
+            .status(200)
+            .json({
+              message: "Login Successful",
+              adminId: docs._id,
+              adminAddress: docs.address,
+            });
         }
       }
     }
   );
 });
 
-router.use(requireAdmin)
+router.use(requireAdmin);
 
 router.post("/acceptIssuerRequest", async (req, res) => {
   await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true })
@@ -39,14 +45,14 @@ router.post("/acceptIssuerRequest", async (req, res) => {
     });
 });
 //Issuer Reject
-router.post("/rejectIssuerRequest", async(req, res) => {
+router.post("/rejectIssuerRequest", async (req, res) => {
   await Issuer.findByIdAndDelete(req.body.issuerId)
-  .then(() =>{
-    return res.status(200).json({ msg: "Issuer rejected" });
-  })
-  .catch((err) => {
-    return res.status(300).json({ msg: "Something Went Wrong" });
-  });
+    .then(() => {
+      return res.status(200).json({ msg: "Issuer rejected" });
+    })
+    .catch((err) => {
+      return res.status(300).json({ msg: "Something Went Wrong" });
+    });
 });
 
 //all issuers

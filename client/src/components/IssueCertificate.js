@@ -4,8 +4,20 @@ import axios from "axios";
 import getContractInfo from "../web3";
 import Sha256 from "../Sha256";
 import FileBuffer from "../FIleBuffer";
+import Success from "../components/Success";
+import Error from "../components/Error";
+import Loader from "../components/Loader";
+import WalletConnect from "./WalletConnect";
 
 function IssueCertificate() {
+  const STATUS = Object.freeze({
+    IDLE: "idle",
+    LOADING: "loading",
+    SUCCESS: "success",
+    ERROR: "error",
+  });
+  const [status, setStatus] = useState(STATUS.IDLE);
+  const [msg, setMsg] = useState("");
   const initialState = {
     firstName: "",
     lastName: "",
@@ -16,6 +28,8 @@ function IssueCertificate() {
   const [programs, setPrograms] = useState(null);
   const [certificateFile, setCertificateFile] = useState("");
   const [fileBufferHash, setFileBufferHash] = useState();
+
+  const [currentAddress, setCurrentAddress] = useState();
   useEffect(() => {
     fetchPrograms();
   }, []);
@@ -24,11 +38,15 @@ function IssueCertificate() {
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     const userId = currentUser._id;
     await axios
-      .post("/api/issuer/getIssuerById", { userId }, {
-        headers:{
-          isserId: userId
+      .post(
+        "/api/issuer/getIssuerById",
+        { userId },
+        {
+          headers: {
+            issuerId: userId,
+          },
         }
-      })
+      )
       .then((res) => {
         setPrograms(res.data.programs);
       })
@@ -57,12 +75,19 @@ function IssueCertificate() {
       return;
     }
     if (certificateFile.size > 102400) {
-      console.log("file exceeds limit");
+      setStatus(STATUS.ERROR);
+      setMsg("File Exceeds Limit");
       return;
     }
+
     BufferString();
 
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (currentAddress !== currentUser.address) {
+      setStatus(STATUS.ERROR);
+      setMsg("Wallet Address Does not Match");
+      return;
+    }
     const formData = new FormData();
     formData.append("file", certificateFile);
     formData.append("currentUserId", currentUser._id);
@@ -75,42 +100,59 @@ function IssueCertificate() {
     formData.append("cid", fileBufferHash);
     console.log("fileBufferHash", fileBufferHash);
     const data = { certificateDetails, currentUser };
-    try {
-      console.log("certificateFile", certificateFile);
-      await axios
-        .post("/api/issuer/issueCertificate", formData, data, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
+
+    const contract = await getContractInfo();
+    if (!contract.loading) {
+      await contract.contract.methods
+        .storeCertificate(
+          fileBufferHash,
+          certificateDetails.firstName + " " + certificateDetails.lastName,
+          currentUser._id,
+          certificateDetails.programName,
+          certificateDetails.issuedDate
+        )
+        .send({ from: currentUser.address })
         .then(async (res) => {
-          console.log("res", res);
-          const contract = await getContractInfo();
-          console.log("contract", contract);
-          if (!contract.loading) {
-            await contract.contract.methods
-              .storeCertificate(
-                fileBufferHash,
-                certificateDetails.firstName +
-                  " " +
-                  certificateDetails.lastName,
-                currentUser._id,
-                certificateDetails.programName,
-                certificateDetails.issuedDate
-              )
-              .send({ from: currentUser.address });
-          }
-          setCertificateFile(null);
-          setCertificateDetails(initialState);
+          await axios
+            .post("/api/issuer/issueCertificate", formData, data, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                issuerId: currentUser._id,
+              },
+            })
+            .then(async (res) => {
+              setStatus(STATUS.SUCCESS);
+              setMsg(res.data.msg);
+              setCertificateFile(null);
+              setCertificateDetails(initialState);
+            })
+            .catch((err) => {
+              setStatus(STATUS.ERROR);
+              setMsg(err.response.data.message);
+            });
+        })
+        .catch((err) => {
+          setStatus(STATUS.ERROR);
+          setMsg("Error Occured");
         });
-    } catch (error) {
-      console.log("error", error);
     }
+    console.log("certificateFile", certificateFile);
+    await axios
+      .post("/api/issuer/issueCertificate", formData, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(async (res) => {
+        setCertificateFile(null);
+        setCertificateDetails(initialState);
+      });
   };
 
   return (
     <div className="m-5" style={{ marginLeft: "2rem" }}>
       <h3 className="mb-3">IssueCertificate</h3>
+      <WalletConnect address={currentAddress} setAddress={setCurrentAddress} />
       <div className="card justify-content-center p-4">
         <form onSubmit={issueCertificate}>
           <div className="row">
@@ -207,6 +249,11 @@ function IssueCertificate() {
             </button>
           </div>
         </form>
+        <div className="mt-3">
+          {status === STATUS.LOADING && <Loader />}
+          {status === STATUS.SUCCESS && <Success success="Login Succesfully" />}
+          {status === STATUS.ERROR && <Error error={msg} />}
+        </div>
       </div>
     </div>
   );

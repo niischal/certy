@@ -56,8 +56,6 @@ function AdminLogin() {
           setStatus(STATUS.ERROR);
         } else {
           setStatus(STATUS.SUCCESS);
-          console.log("data", data);
-          console.log(status);
           navigate("/admin");
           localStorage.setItem("admin", JSON.stringify(data));
           window.location.href = "/admin";
@@ -113,14 +111,13 @@ function AdminLogin() {
                     }
                   />
                   <span
-                  style={{
-                    position: "absolute",
-                    top: "70%",
-                    right: "1rem",
-                    transform: "translateY(-50%)",
-                    cursor: "pointer"
-                  }}
-
+                    style={{
+                      position: "absolute",
+                      top: "70%",
+                      right: "1rem",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                    }}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}

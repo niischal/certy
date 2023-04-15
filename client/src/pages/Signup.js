@@ -15,6 +15,7 @@ const Signup = () => {
     SUCCESS: "success",
     ERROR: "error",
   });
+  const [msg, setMsg] = useState("");
   const [name, setName] = useState("");
   const [issuerId, setIssuerId] = useState("");
   const [phoneNo, setPhoneNo] = useState();
@@ -28,7 +29,12 @@ const Signup = () => {
   const register = (e) => {
     e.preventDefault();
     handleConnect();
-    if (password === cpassword && address !== "") {
+    if (address === "") {
+      setStatus(STATUS.ERROR);
+      setMsg("Wallet Not Connected");
+      return;
+    }
+    if (password === cpassword) {
       const newUser = {
         name: name,
         issuerId: issuerId,
@@ -47,7 +53,7 @@ const Signup = () => {
         })
         .catch((err) => {
           setStatus(STATUS.ERROR);
-          console.log(err);
+          setMsg(err.response.data.message);
         });
     } else {
       setFormStatus(STATUS.ERROR);
@@ -213,9 +219,7 @@ const Signup = () => {
                 {status === STATUS.SUCCESS && (
                   <Success success="Registration Details Submitted Succesfully" />
                 )}
-                {status === STATUS.ERROR && (
-                  <Error error="Somthing went wrong" />
-                )}
+                {status === STATUS.ERROR && <Error error={msg} />}
                 <hr />
                 <div className="text-center">
                   <Link to="/" className="simple-link">
