@@ -1,19 +1,21 @@
-const Issuer = require('../models/issuerModel')
+const Issuer = require("../models/issuerModel");
 
-const requireAuth = async (req, res, next) =>{
-    const issuerId = req.headers.issuerid
+const requireAuth = async (req, res, next) => {
+  const issuerId = req.headers.issuerid;
+  console.log("req.headers", req.headers);
+  if (!issuerId) {
+    return res
+      .status(401)
+      .json({ message: "Authorization Required", issuerId: issuerId });
+  }
 
-    if(!issuerId){
-        return res.status(401).json({message: 'Authorization Required', issuerId: issuerId})
-    }
+  const issuer = await Issuer.findOne({ _id: issuerId });
 
-    const issuer = await Issuer.findOne({_id: issuerId});
+  if (!issuer) {
+    return res.status(401).json({ message: "Invalid Request" });
+  }
 
-    if(!issuer){
-        return res.status(401).json({message: 'Invalid Request'})
-    }
+  next();
+};
 
-    next();
-}
-
-module.exports = requireAuth
+module.exports = requireAuth;

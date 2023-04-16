@@ -98,6 +98,7 @@ function IssueCertificate() {
     formData.append("programName", certificateDetails.programName);
     formData.append("issuedDate", certificateDetails.issuedDate);
     formData.append("cid", fileBufferHash);
+    formData.append("currentUser", currentUser);
     console.log("fileBufferHash", fileBufferHash);
     const data = { certificateDetails, currentUser };
 
@@ -114,12 +115,18 @@ function IssueCertificate() {
         .send({ from: currentUser.address })
         .then(async (res) => {
           await axios
-            .post("/api/issuer/issueCertificate", {formData, data}, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-                issuerId: currentUser._id,
-              },
-            })
+            .post(
+              "/api/issuer/issueCertificate",
+
+              formData,
+
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                  issuerId: currentUser._id,
+                },
+              }
+            )
             .then(async (res) => {
               setStatus(STATUS.SUCCESS);
               setMsg(res.data.msg);
@@ -136,18 +143,6 @@ function IssueCertificate() {
           setMsg("Error Occured");
         });
     }
-    console.log("certificateFile", certificateFile);
-    await axios
-      .post("/api/issuer/issueCertificate", {formData, data}, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          issuerId: currentUser._id
-        },
-      })
-      .then(async (res) => {
-        setCertificateFile(null);
-        setCertificateDetails(initialState);
-      });
   };
 
   return (
@@ -252,7 +247,9 @@ function IssueCertificate() {
         </form>
         <div className="mt-3">
           {status === STATUS.LOADING && <Loader />}
-          {status === STATUS.SUCCESS && <Success success="Login Succesfully" />}
+          {status === STATUS.SUCCESS && (
+            <Success success="Certificate Issued" />
+          )}
           {status === STATUS.ERROR && <Error error={msg} />}
         </div>
       </div>

@@ -134,7 +134,7 @@ router.post("/getIssuerById", async (req, res) => {
 router.post("/issueCertificate", upload.single("file"), async (req, res) => {
   const url = req.protocol + "://" + req.get("host");
   const certificateUrl = url + "/public/certificates/" + req.file.filename;
-  const { formdata, data} = req.body;
+  const { formdata, data } = req.body;
 
   const { currentUserId } = req.body;
   const issuer = await Issuer.findById(currentUserId);
