@@ -114,7 +114,7 @@ function IssueCertificate() {
         .send({ from: currentUser.address })
         .then(async (res) => {
           await axios
-            .post("/api/issuer/issueCertificate", formData, data, {
+            .post("/api/issuer/issueCertificate", {formData, data}, {
               headers: {
                 "Content-Type": "multipart/form-data",
                 issuerId: currentUser._id,
@@ -138,9 +138,10 @@ function IssueCertificate() {
     }
     console.log("certificateFile", certificateFile);
     await axios
-      .post("/api/issuer/issueCertificate", formData, data, {
+      .post("/api/issuer/issueCertificate", {formData, data}, {
         headers: {
           "Content-Type": "multipart/form-data",
+          issuerId: currentUser._id
         },
       })
       .then(async (res) => {

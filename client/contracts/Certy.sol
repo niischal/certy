@@ -69,10 +69,10 @@ contract Certy {
         string memory _issuedDate
     ) public onlyIssuer {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
-        // require(
-        //     Certificates[_cid].exist == false,
-        //     "The Certificate already exists."
-        // );
+        require(
+            Certificates[_cid].exist == false,
+            "The Certificate already exists."
+        );
         Certificates[_cid].cid = _cid;
         Certificates[_cid].holderName = _holderName;
         Certificates[_cid].issuerName = _issuerName;
