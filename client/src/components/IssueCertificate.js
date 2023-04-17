@@ -130,7 +130,7 @@ function IssueCertificate() {
             .then(async (res) => {
               setStatus(STATUS.SUCCESS);
               setMsg(res.data.msg);
-              setCertificateFile(null);
+              setCertificateFile("");
               setCertificateDetails(initialState);
             })
             .catch((err) => {

@@ -293,3 +293,10 @@ background-color: #00ADAD;
 .lower-part{
   color: rgb(102, 102, 102);
 }
+
+.fileViewer{
+  padding: 0px 00px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}

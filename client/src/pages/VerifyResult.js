@@ -6,6 +6,7 @@ import Error from "../components/Error";
 import Loader from "../components/Loader";
 import getContractInfo from "../web3";
 import axios from "axios";
+import FileViewer from "../components/FileViewer";
 
 const VerifyResult = () => {
   const STATUS = Object.freeze({
@@ -18,7 +19,7 @@ const VerifyResult = () => {
   const [status, setStatus] = useState(STATUS.IDLE);
   const [result, setResult] = useState(false);
   const [certificateDetails, setCertificateDetails] = useState("");
-
+  const [uri, setUri] = useState("");
   const [issuerName, setIssuerName] = useState("");
   const [program, setProgram] = useState("");
   useEffect(() => {
@@ -52,9 +53,24 @@ const VerifyResult = () => {
           .getCertificate(cid)
           .call();
         setCertificateDetails(certificateDetails);
+        await getUri();
         await getIssuerName();
+        // getUri();
       }
     }
+  };
+
+  const getUri = async () => {
+    await axios
+      .post("/api/general/getCertificateByCid", { cid })
+      .then((res) => {
+        fetch(res.data.url)
+          .then((res) => res.blob())
+          .then((imageBlob) => {
+            setUri(URL.createObjectURL(imageBlob));
+          });
+      })
+      .catch((err) => console.log("err", err));
   };
   const getIssuerName = async () => {
     if (certificateDetails) {
@@ -122,6 +138,9 @@ const VerifyResult = () => {
                     {certificateDetails.timestamp}
                   </label>
                 </div>
+              </div>
+              <div className="fileViewer">
+                <FileViewer uri={uri} />
               </div>
               <hr />
               <div className="lower-part text-center">

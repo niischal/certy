@@ -20,7 +20,6 @@ const storage = multer.diskStorage({
     callback(null, "public/certificates");
   },
   filename: (req, file, callback) => {
-    console.log("file.buffer", file);
     const fileName =
       "Certificate" +
       "-" +
@@ -31,6 +30,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: (req, file, callback) => {
+    console.log("file", file);
     var ext = path.extname(file.originalname);
     if (ext !== ".pdf" && ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg") {
       return callback(new Error("Only pdf,jpg,png allowed"));
