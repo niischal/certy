@@ -22,7 +22,7 @@ app.use("/api/general", generalRoute);
 app.get("/public/certificates/:id", async (req, res) => {
   const id = req.params.id;
   console.log("id", id);
-  const filePath = `D:/niischal/certy/public/certificates/${id}`;
+  const filePath = process.env.ROOT_DIR + `/public/certificates/${id}`;
   console.log("filePath", filePath);
   res.sendFile(filePath);
 });
