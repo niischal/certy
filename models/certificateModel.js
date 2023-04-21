@@ -9,7 +9,10 @@ const certificateSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  issuer: {},
+  issuer: {
+    type: mongoose.Schema.Types.ObjectId,
+    require: true,
+  },
   dateOfCertification: {
     type: Date,
     require: true,
@@ -18,8 +21,11 @@ const certificateSchema = mongoose.Schema({
     type: String,
     require: true,
   },
+  url: {
+    type: String,
+    require: true,
+  },
 });
 
 const Certificate = mongoose.model("certificates", certificateSchema);
-module.exports = certificateSchema;
 module.exports = Certificate;

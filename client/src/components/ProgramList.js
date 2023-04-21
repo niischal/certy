@@ -28,7 +28,11 @@ function ProgramList() {
     const fetchPrograms = async ()=>{
       setStatus(STATUS.LOADING)
       await axios
-      .post('/api/issuer/getIssuerById', {userId})
+      .post('/api/issuer/getIssuerById', {userId}, {
+        headers: {
+          issuerId: userId
+        }
+      })
       .then((res)=>{
         setStatus(STATUS.SUCCESS)
         setPrograms(res.data.programs)
@@ -60,7 +64,7 @@ function ProgramList() {
             <th>Program Name</th>
             <th>Initiation Date</th>
             <th>Completion Date</th>
-            <th>Actions</th>
+            {/* <th>Actions</th> */}
           </tr>
         </thead>
         <tbody>
@@ -73,7 +77,7 @@ function ProgramList() {
             <td>{program.programName}</td>
             <td>{initiationDate.toLocaleDateString(undefined, options)}</td>
             <td>{completionDate.toLocaleDateString(undefined, options)}</td>
-            <td>//Actions</td>
+            {/* <td>//Actions</td> */}
           </tr>
          })}
         </tbody>

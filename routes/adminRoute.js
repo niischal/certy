@@ -3,49 +3,56 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const Admin = require("../models/adminModel");
 const Issuer = require("../models/issuerModel");
-
-const contractInfo = require("../web3");
+const requireAdmin = require("../middleware/requireAdmin");
 
 router.post("/adminLogin", (req, res) => {
-  console.log("req.body", req.body.username);
   Admin.findOne(
     { username: req.body.adminLoginDetails.username },
     (err, docs) => {
       if (err) {
         console.log("err", err);
       }
-      console.log("docs", docs);
       if (!docs) {
-        return res.status(401).json({ message: "Invalid Credentials" });
+        return res.status(401).json({ msg: "Invalid Credentials" });
       } else {
         if (docs.password !== req.body.adminLoginDetails.password) {
-          console.log("docsa", docs);
-          return res.status(401).json({ message: "Invalid Credentials" });
+          return res.status(401).json({ msg: "Invalid Credentials" });
+        } else if (docs.address !== req.body.adminLoginDetails.address) {
+          return res.status(401).json({ msg: "Wallet Address does not match" });
         } else {
-          return res.status(200).json({ message: "Login Successful" });
+          return res
+            .status(200)
+            .json({
+              message: "Login Successful",
+              adminId: docs._id,
+              adminAddress: docs.address,
+            });
         }
       }
     }
   );
 });
 
+router.use(requireAdmin);
+
 router.post("/acceptIssuerRequest", async (req, res) => {
-  const issuer = await Issuer.findById(req.body.issuerId);
-
-  if (!contractInfo.loading && issuer) {
-    await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true });
-    await contractInfo.contract.methods
-      .addIssuer(issuer.address, issuer._id.toString())
-      .send({ from: "0x855151B12fFa8189b406356D1CB7f0ae59834519" });
-
-    // const response = await contractInfo.contract.methods
-    //   .returnIssuers(issuer.address)
-    //   .call();
-    // console.log("response", response);
-    return res.status(200).json({ message: "Successfully added" });
-  } else {
-    console.log("contract not loaded");
-  }
+  await Issuer.findByIdAndUpdate(req.body.issuerId, { addedByAdmin: true })
+    .then(() => {
+      return res.status(200).json({ msg: "Successfully added" });
+    })
+    .catch((err) => {
+      return res.status(300).json({ msg: "Something Went Wrong" });
+    });
+});
+//Issuer Reject
+router.post("/rejectIssuerRequest", async (req, res) => {
+  await Issuer.findByIdAndDelete(req.body.issuerId)
+    .then(() => {
+      return res.status(200).json({ msg: "Issuer rejected" });
+    })
+    .catch((err) => {
+      return res.status(300).json({ msg: "Something Went Wrong" });
+    });
 });
 
 //all issuers

@@ -16,7 +16,7 @@ contract Certy {
         bytes32 cid;
         string holderName;
         string issuerName;
-        uint timestamp;
+        string timestamp;
         string program;
         bool exist;
     }
@@ -35,7 +35,18 @@ contract Certy {
         require(issuers[msg.sender].exists == true, "Not Issuer");
         _;
     }
-
+    //Events
+    event IssuerAdded(
+        string isserId,
+        address issuerAddress
+    );
+    event CertificateAdded(
+        string cid,
+        string holderName,
+        string issuerName,
+        string issuedDate,
+        string program
+    );
     //function
 
     //function to add an issuer
@@ -46,6 +57,7 @@ contract Certy {
         issuers[_issuerAddress].issuerAddress = _issuerAddress;
         issuers[_issuerAddress].id = _issuerId;
         issuers[_issuerAddress].exists = true;
+        emit IssuerAdded(_issuerId, _issuerAddress);
     }
 
     //Stores Certificate CID and details.
@@ -53,7 +65,8 @@ contract Certy {
         string memory cid,
         string memory _holderName,
         string memory _issuerName,
-        string memory _program
+        string memory _program,
+        string memory _issuedDate
     ) public onlyIssuer {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
         require(
@@ -64,8 +77,9 @@ contract Certy {
         Certificates[_cid].holderName = _holderName;
         Certificates[_cid].issuerName = _issuerName;
         Certificates[_cid].program = _program;
-        Certificates[_cid].timestamp = block.timestamp;
+        Certificates[_cid].timestamp = _issuedDate;
         Certificates[_cid].exist = true;
+        emit CertificateAdded(cid, _holderName, _issuerName, _issuedDate, _program);
     }
 
     //Get Certificate details from cid
@@ -73,7 +87,7 @@ contract Certy {
         string memory cid
     ) public view returns (Certificate memory) {
         bytes32 _cid = keccak256(abi.encodePacked(cid));
-        require(Certificates[_cid].exist == true);
+        require(Certificates[_cid].exist == true, "Certificate Do not Exists");
         return Certificates[_cid];
     }
 

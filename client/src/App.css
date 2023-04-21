@@ -149,6 +149,9 @@ font-size: 6.5px;
   background: #00ADAD;
   border-radius:  0px 24px   24px 0px ;
 }
+.verify-box h4{
+  color: white;
+}
 .i-login{
   background: White;
   border-radius: 24px 0px  0px 24px;
@@ -250,4 +253,50 @@ background-color: #00ADAD;
   /* width: 100px; */
   border-radius: 5px;
   padding: 7px;
+}
+.reject-btn{
+  background:gray;
+  border: none;
+  color: white;
+  /* width: 100px; */
+  border-radius: 5px;
+  padding: 7px;
+}
+
+/*verifyResult*/
+.container-rounded {
+  border-radius: 20px;
+  border: 1px solid #ced4da;
+  width: 75%;
+}
+.upper-part {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #00ADAD;
+  border-radius: 20px 20px 0 0;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.verified-section {
+  align-items: center;
+}
+
+.my-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #4cdd53;
+  color: white;
+  border-radius: 10px;
+}
+.lower-part{
+  color: rgb(102, 102, 102);
+}
+
+.fileViewer{
+  padding: 0px 00px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }

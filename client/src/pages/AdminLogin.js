@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-
+import Success from "../components/Success";
+import Error from "../components/Error";
+import Loader from "../components/Loader";
 import { useNavigate } from "react-router-dom";
+import WalletConnect from "../components/WalletConnect";
 
 function AdminLogin() {
   const STATUS = Object.freeze({
@@ -12,48 +15,67 @@ function AdminLogin() {
     ERROR: "error",
   });
   const [status, setStatus] = useState(STATUS.IDLE);
+  const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const [address, setAddress] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [adminLoginDetails, setAdminLoginDetails] = useState({
     username: "",
     password: "",
+    address: "",
   });
 
-  const loginAdmin = (e) => {
+  useEffect(() => {
+    setAdminLoginDetails({
+      ...adminLoginDetails,
+      address: address,
+    });
+  }, [address]);
+
+  const loginAdmin = async (e) => {
     e.preventDefault();
     console.log("adminLoginDetails", adminLoginDetails);
     setStatus(STATUS.LOADING);
     if (!adminLoginDetails.username || !adminLoginDetails.password) {
       setStatus(STATUS.ERROR);
+      setMsg("Username or password is empty");
       return;
     }
-    try {
-      axios.post("/api/admin/adminLogin", { adminLoginDetails }).then((res) => {
+    if (!adminLoginDetails.address) {
+      setStatus(STATUS.ERROR);
+      setMsg("Wallet not connected");
+      return;
+    }
+
+    await axios
+      .post("/api/admin/adminLogin", { adminLoginDetails })
+      .then((res) => {
+        console.log("res.message", res);
         const data = res.data;
         if (!data) {
           setStatus(STATUS.ERROR);
         } else {
           setStatus(STATUS.SUCCESS);
-          console.log("data", data);
-          console.log(status);
           navigate("/admin");
+          localStorage.setItem("admin", JSON.stringify(data));
+          window.location.href = "/admin";
         }
+      })
+      .catch((err) => {
+        setStatus(STATUS.ERROR);
+        setMsg(err.response.data.msg);
       });
-    } catch {
-      setStatus(STATUS.ERROR);
-      console.log("status", status);
-    }
   };
   return (
     <>
       <div id="div" className="container-fluid text-center ">
         <div className="row align-items-center justify-content-center">
-          <div className="col-4 m-5 p-3" id="login">
+          <div className="col-4 m-5 p-3 " id="login">
             <h2 id="p2">CERTY</h2>
             <p>Welcome Admin, Please login to your account</p>
-            <form className="row justify-content-center">
-              <div className="form-group my-3 text-start ">
-                <div className="ps-5 pe-5">
+            <form>
+              <div className="row form-group text-start justify-content-center py-2">
+                <div className="col-8">
                   <label htmlFor="username" className="form-label ">
                     Username
                   </label>
@@ -71,18 +93,15 @@ function AdminLogin() {
                   />
                 </div>
               </div>
-              <div className="form-group  my-3 text-start">
-                <div
-                  className="ps-5 pe-5"
-                  style={{ position: "relative", display: "inline-block" }}
-                >
+              <div className="row form-group py-2 text-start justify-content-center">
+                <div className="col-8 " style={{ position: "relative" }}>
                   <label htmlFor="password" className="form-label">
                     Password
                   </label>
                   <input
                     type={showPassword ? "text" : "password"}
                     className="form-control"
-                    placeholder="********"
+                    placeholder="Password"
                     required
                     onChange={(e) =>
                       setAdminLoginDetails({
@@ -92,17 +111,34 @@ function AdminLogin() {
                     }
                   />
                   <span
-                    className="password-toggle-icons"
+                    style={{
+                      position: "absolute",
+                      top: "70%",
+                      right: "1rem",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                    }}
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
                 </div>
               </div>
+              <div className="row ">
+                <div className="">
+                  <WalletConnect address={address} setAddress={setAddress} />
+                </div>
+              </div>
+              <div className="mt-3">
+                {status === STATUS.LOADING && <Loader />}
+                {status === STATUS.SUCCESS && (
+                  <Success success="Login Succesfully" />
+                )}
+                {status === STATUS.ERROR && <Error error={msg} />}
+              </div>
               <button
                 type="submit"
-                className="btn mt-2"
-                id="lbutton"
+                className="solid-btn col-3 my-2"
                 onClick={loginAdmin}
               >
                 Login

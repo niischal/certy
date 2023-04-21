@@ -15,6 +15,7 @@ const Signup = () => {
     SUCCESS: "success",
     ERROR: "error",
   });
+  const [msg, setMsg] = useState("");
   const [name, setName] = useState("");
   const [issuerId, setIssuerId] = useState("");
   const [phoneNo, setPhoneNo] = useState();
@@ -25,14 +26,15 @@ const Signup = () => {
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const [address, setAddress] = useState("");
 
-  useEffect(() => {
-    handleConnect();
-  }, []);
-
   const register = (e) => {
     e.preventDefault();
     handleConnect();
-    if (password === cpassword && address !== "") {
+    if (address === "") {
+      setStatus(STATUS.ERROR);
+      setMsg("Wallet Not Connected");
+      return;
+    }
+    if (password === cpassword) {
       const newUser = {
         name: name,
         issuerId: issuerId,
@@ -51,7 +53,7 @@ const Signup = () => {
         })
         .catch((err) => {
           setStatus(STATUS.ERROR);
-          console.log(err);
+          setMsg(err.response.data.message);
         });
     } else {
       setFormStatus(STATUS.ERROR);
@@ -100,7 +102,7 @@ const Signup = () => {
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="NIST College"
+                    placeholder="Your Institute Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -112,7 +114,7 @@ const Signup = () => {
                     <label>Issuer ID (PAN)</label>
                     <input
                       className="form-control"
-                      placeholder="423634432"
+                      placeholder="Permanent Account Number"
                       value={issuerId}
                       required
                       onChange={(e) => setIssuerId(e.target.value)}
@@ -123,7 +125,7 @@ const Signup = () => {
                     <input
                       type="tel"
                       className="form-control"
-                      placeholder="0119432"
+                      placeholder="Phone Number"
                       value={phoneNo}
                       required
                       onChange={(e) => setPhoneNo(e.target.value)}
@@ -136,7 +138,7 @@ const Signup = () => {
                   <input
                     type="email"
                     className="form-control"
-                    placeholder="info@nist.edu.np"
+                    placeholder="Your Email Address"
                     value={email}
                     required
                     onChange={(e) => setEmail(e.target.value)}
@@ -151,7 +153,7 @@ const Signup = () => {
                     <input
                       type={showPassword ? "text" : "password"}
                       className="form-control"
-                      placeholder="********"
+                      placeholder="Password"
                       value={password}
                       required
                       onChange={(e) => setPassword(e.target.value)}
@@ -171,7 +173,7 @@ const Signup = () => {
                     <input
                       type={showPassword ? "text" : "password"}
                       className="form-control"
-                      placeholder="********"
+                      placeholder="Password"
                       value={cpassword}
                       required
                       onChange={(e) => setCpassword(e.target.value)}
@@ -217,9 +219,7 @@ const Signup = () => {
                 {status === STATUS.SUCCESS && (
                   <Success success="Registration Details Submitted Succesfully" />
                 )}
-                {status === STATUS.ERROR && (
-                  <Error error="Somthing went wrong" />
-                )}
+                {status === STATUS.ERROR && <Error error={msg} />}
                 <hr />
                 <div className="text-center">
                   <Link to="/" className="simple-link">

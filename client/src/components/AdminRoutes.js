@@ -1,6 +1,4 @@
 import { FaHome, FaUser, FaReadme } from "react-icons/fa";
-import { SiGoogleclassroom } from "react-icons/si";
-import { TbCertificate } from "react-icons/tb";
 const AdminRoutes = [
   {
     id: 1,
@@ -19,18 +17,6 @@ const AdminRoutes = [
     path: "/admin/issuerRequest",
     name: "Pending Request",
     icon: <FaReadme />,
-  },
-  {
-    id: 4,
-    path: "/admin/programList",
-    name: "Program List",
-    icon: <SiGoogleclassroom />,
-  },
-  {
-    id: 5,
-    path: "/admin/issueCertificate",
-    name: "Issue Certificate",
-    icon: <TbCertificate />,
   },
 ];
 

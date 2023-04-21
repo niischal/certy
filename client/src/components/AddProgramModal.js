@@ -11,6 +11,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
     SUCCESS: "success",
     ERROR: "error",
   });
+  const [isChecked, setIsChecked] = useState(false);
   const [status, setStatus] = useState(STATUS.IDLE);
   const [formStatus, setFormStatus] = useState(STATUS.IDLE);
   const initialState = {
@@ -28,7 +29,11 @@ function AddProgramModal({ changeModalState, updateTableState }) {
       const newProgram = {currentUser,programDetails};
       setStatus(STATUS.LOADING)
       axios
-        .post("/api/issuer/addProgram", newProgram)
+        .post("/api/issuer/addProgram", newProgram, {
+          headers:{
+            issuerId: currentUser._id
+          }
+        })
         .then((res) => {
           setStatus(STATUS.SUCCESS);
           console.log(res);
@@ -134,6 +139,10 @@ function AddProgramModal({ changeModalState, updateTableState }) {
                   </div>
                 </div>
               </div>
+              <label style={{marginLeft:"20px"}}>
+              <input type="checkbox" checked={isChecked} onChange={() => setIsChecked(!isChecked)} />
+                Please read all the details carefully before checking the checkbox.
+              </label>
               <div className="modal-footer">
                 <button
                   type="button"
@@ -142,7 +151,7 @@ function AddProgramModal({ changeModalState, updateTableState }) {
                 >
                   Close
                 </button>
-                <button type="submit" className="solid-btn">
+                <button type="submit" className="solid-btn" disabled={!isChecked}>
                   Add Program
                 </button>
               </div>

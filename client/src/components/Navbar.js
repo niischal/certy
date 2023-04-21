@@ -5,6 +5,21 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = (props) => {
   const user = JSON.parse(localStorage.getItem('currentUser'))
+  const admin = JSON.parse(localStorage.getItem("admin"))
+  const username = user ? user.name : 'admin'
+  const handleLogout = () =>{
+    if(user){
+      localStorage.removeItem('currentUser')
+      window.location.href = '/'
+      return
+    }
+    if(admin){
+      localStorage.removeItem('admin')
+      window.location.href = '/adminLogin'
+      return
+    }
+    
+  }
   return (
     <>
       <nav className="navbar navbar-expand-lg shadow">
@@ -35,11 +50,11 @@ const Navbar = (props) => {
             <li className="nav-item">
               <NavLink className="nav-link">
                 {" "}
-                <p className="pclass">Hello, {user.name} |</p>{" "}
+                <p className="pclass">Hello, {username} |</p>{" "}
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/"  onClick={()=>{localStorage.removeItem('currentUser')}}>
+              <NavLink className="nav-link" to="/"  onClick={handleLogout}>
                 <p className="pclass">Log Out</p>{" "}
                 
               </NavLink>
