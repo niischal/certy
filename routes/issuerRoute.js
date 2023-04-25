@@ -7,6 +7,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const requireAuth = require("../middleware/requireAuth");
+const bcrypt = require('bcrypt')
 
 //For File Upload
 const storage = multer.diskStorage({
@@ -40,19 +41,21 @@ const upload = multer({
 });
 
 ///Routes
-router.post("/issuerRegistrationRequest", (req, res) => {
+router.post("/issuerRegistrationRequest",  async(req, res) => {
   Issuer.find(
     { email: req.body.email, issuerID: req.body.issuerID },
-    (err, docs) => {
+    async (err, docs) => {
       if (docs.length > 0) {
         return res.status(400).json({ message: "Already Registered" });
       } else {
+        const salt = await  bcrypt.genSalt(5);
+        const hash = await  bcrypt.hash(req.body.password, salt);
         const newIssuer = new Issuer({
           name: req.body.name,
           issuerID: req.body.issuerID,
           address: req.body.address,
           email: req.body.email,
-          password: req.body.password,
+          password: hash,
           phoneNo: req.body.phoneNo,
           address: req.body.address,
           addedByAdmin: false,
@@ -72,12 +75,13 @@ router.post("/issuerRegistrationRequest", (req, res) => {
   );
 });
 
-router.post("/issuerLogin", (req, res) => {
-  Issuer.findOne({ email: req.body.email }, (err, docs) => {
+router.post("/issuerLogin", async (req, res) => {
+  Issuer.findOne({ email: req.body.email }, async(err, docs) => {
     if (!docs) {
       return res.status(401).json({ message: "Invalid Credentials" });
     } else {
-      if (docs.password !== req.body.password) {
+      const match = await bcrypt.compare(req.body.password, docs.password)
+      if (!match) {
         return res.status(401).json({ message: "Invalid Credentials" });
       } else if (docs.addedByAdmin === false) {
         return res.status(401).json({ message: "Not verified by Admin" });
