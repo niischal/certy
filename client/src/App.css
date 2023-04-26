@@ -300,3 +300,24 @@ background-color: #00ADAD;
   justify-content: center;
   display: flex;
 }
+/* change */
+.upload-btn {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  margin-left: 30%;
+}
+
+.upload-btn:hover {
+  background-color: #e0e0e0;
+}
+.hash-box{
+  margin-top: 30%;
+}
+.verify-box:hover{
+  background: #08c2c2;
+  cursor: pointer;
+}
