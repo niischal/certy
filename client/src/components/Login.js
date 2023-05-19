@@ -42,8 +42,9 @@ const Login = () => {
         address,
       })
       .then((res) => {
-        console.log("res.data", res.data);
         const data = res.data;
+
+        console.log("res", res);
         if (!data) {
           setStatus(STATUS.ERROR);
           setMsg(res.data.message);

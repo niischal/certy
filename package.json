@@ -4,7 +4,7 @@
   "description": "decentralized certificate verification application",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cross-env NODE_ENV=test jest --testTimeout=5000",
     "server": "nodemon server.js"
   },
   "repository": {
@@ -21,12 +21,19 @@
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jest": "^29.5.0",
     "mongoose": "^6.9.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^2.0.20",
+    "supertest": "^6.3.3",
     "uuid": "^3.4.0",
     "web3": "^1.8.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0"
   }
 }

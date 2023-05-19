@@ -15,7 +15,12 @@ const VerifyResult = () => {
     SUCCESS: "success",
     ERROR: "error",
   });
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
   const { cid } = useParams();
   const [status, setStatus] = useState(STATUS.IDLE);
   const [result, setResult] = useState(false);
@@ -29,12 +34,14 @@ const VerifyResult = () => {
     // if (result) {
     //   getCertificateInfo();
     // }
+
     getCertificateInfo();
   }, [result]);
 
   const handleVerify = async () => {
     const contract = await getContractInfo();
     if (!contract.loading) {
+      console.log("contract", contract);
       const result = await contract.contract.methods
         .check(cid)
         .call()
@@ -100,7 +107,7 @@ const VerifyResult = () => {
           {!result && status === STATUS.ERROR && (
             <Error error="Certificate Verification Failed" />
           )}
-          {result && status === STATUS.SUCCESS &&  (
+          {result && status === STATUS.SUCCESS && (
             <>
               <div className="upper-part p-2">
                 <h4 className="mb-0">{certificateDetails.holderName}</h4>
@@ -124,13 +131,18 @@ const VerifyResult = () => {
                 <div className="col-md-6 p-2">
                   <label>
                     <strong>Start Date: </strong>
-                    {new Date(program.dateOfProgramInitiation).toLocaleDateString(undefined, options)}
+                    {new Date(
+                      program.dateOfProgramInitiation
+                    ).toLocaleDateString(undefined, options)}
                   </label>
                 </div>
                 <div className="col-md-6 p-2">
                   <label>
                     <strong>Completion Date: </strong>
-                    {new Date(program.dateOfCompletion).toLocaleDateString(undefined, options)}
+                    {new Date(program.dateOfCompletion).toLocaleDateString(
+                      undefined,
+                      options
+                    )}
                   </label>
                 </div>
                 <div className="col-md-6 p-2">
@@ -141,6 +153,7 @@ const VerifyResult = () => {
                 </div>
               </div>
               <div className="fileViewer">
+                {console.log("uri", uri)}
                 <FileViewer uri={uri} />
               </div>
               <hr />
