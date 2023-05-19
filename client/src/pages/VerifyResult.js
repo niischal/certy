@@ -4,9 +4,11 @@ import VerifiedBadge from "../components/VerifiedBadge";
 import { useParams } from "react-router";
 import Error from "../components/Error";
 import Loader from "../components/Loader";
-import getContractInfo from "../web3";
 import axios from "axios";
 import FileViewer from "../components/FileViewer";
+import getContractInfo from "../web3";
+// import Web3 from "web3";
+// import Certy from "../../src/truffle_abis/Certy.json";
 
 const VerifyResult = () => {
   const STATUS = Object.freeze({
@@ -21,6 +23,10 @@ const VerifyResult = () => {
     month: "long",
     day: "numeric",
   };
+  const initialContract = {
+    contract: {},
+    loading: true,
+  };
   const { cid } = useParams();
   const [status, setStatus] = useState(STATUS.IDLE);
   const [result, setResult] = useState(false);
@@ -28,44 +34,63 @@ const VerifyResult = () => {
   const [uri, setUri] = useState("");
   const [issuerName, setIssuerName] = useState("");
   const [program, setProgram] = useState("");
+  // const [contractData, setContractData] = useState(initialContract);
   useEffect(() => {
     setStatus(STATUS.LOADING);
-    handleVerify();
+    const handleVerify = async () => {
+      const contractData = await getContractInfo();
+      if (!contractData.loading) {
+        const result = await contractData.contract.methods
+          .check(cid)
+          .call()
+          .catch((err) => console.log("Certificate Does Not Exists"));
+        if (result) {
+          setResult(result);
+          setStatus(STATUS.SUCCESS);
+        } else {
+          setStatus(STATUS.ERROR);
+        }
+      }
+    };
+    const getCertificateInfo = async () => {
+      if (status !== STATUS.ERROR) {
+        const contractData = await getContractInfo();
+        if (!contractData.loading) {
+          const certificateDetails = await contractData.contract.methods
+            .getCertificate(cid)
+            .call();
+          setCertificateDetails(certificateDetails);
+          await getUri();
+          await getIssuerName();
+          // getUri();
+        }
+      }
+    };
     // if (result) {
     //   getCertificateInfo();
     // }
-
+    handleVerify();
     getCertificateInfo();
-  }, [result]);
+  }, []);
 
-  const handleVerify = async () => {
-    const contract = await getContractInfo();
-    if (!contract.loading) {
-      console.log("contract", contract);
-      const result = await contract.contract.methods
-        .check(cid)
-        .call()
-        .catch((err) => console.log("Certificate Does Not Exists"));
-      if (result) {
-        setResult(result);
-      } else {
-        setStatus(STATUS.ERROR);
-      }
-    }
-  };
-  const getCertificateInfo = async () => {
-    if (status !== STATUS.ERROR) {
-      const contract = await getContractInfo();
-      if (!contract.loading) {
-        const certificateDetails = await contract.contract.methods
-          .getCertificate(cid)
-          .call();
-        setCertificateDetails(certificateDetails);
-        await getUri();
-        await getIssuerName();
-        // getUri();
-      }
-    }
+  // const loadContract = async () => {
+  //   const contract = await getContractInfo();
+  //   console.log("con", contract);
+  //   await sleep(5);
+  //   if (!contract.loading) {
+  //     setContractData(
+  //       setContractData((contractData) => ({
+  //         ...contractData,
+  //         ...{ contract: contract },
+  //         ...{ loading: false },
+  //       }))
+  //     );
+  //   }
+  //   await handleVerify();
+  //   await getCertificateInfo();
+  // };
+  const sleep = (sec) => {
+    return new Promise((resolve) => setTimeout(resolve, sec * 1000));
   };
 
   const getUri = async () => {
