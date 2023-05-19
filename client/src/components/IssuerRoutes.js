@@ -2,15 +2,15 @@ import { FaHome } from "react-icons/fa";
 import { SiGoogleclassroom } from "react-icons/si";
 import { TbCertificate } from "react-icons/tb";
 const IssuerRoutes = [
-  {
-    id: 1,
-    path: "/issuer",
-    name: "Home",
-    icon: <FaHome />,
-  },
+  // {
+  //   id: 1,
+  //   path: "/issuer",
+  //   name: "Home",
+  //   icon: <FaHome />,
+  // },
   {
     id: 2,
-    path: "/issuer/programList",
+    path: "/issuer/",
     name: "Program List",
     icon: <SiGoogleclassroom />,
   },
@@ -19,7 +19,7 @@ const IssuerRoutes = [
     path: "/issuer/issueCertificate",
     name: "Issue Certificate",
     icon: <TbCertificate />,
-  }
+  },
 ];
 
 export default IssuerRoutes;

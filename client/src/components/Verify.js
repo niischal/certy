@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sha256 from "../Sha256";
 import FileBuffer from "../FIleBuffer";
 import { Link } from "react-router-dom";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 const Verify = () => {
   const [file, setFile] = useState(null);
@@ -32,13 +33,10 @@ const Verify = () => {
     }
   };
   useEffect(() => {
-    console.log("file", file);
     if (file && file.size > 102400) {
       console.log("file limit exceeds");
       setSizeError(true);
     } else if (file && file.size < 102400) {
-      console.log("file", file);
-      console.log("fileBufferHash", fileBufferHash);
       BufferString();
     }
   }, [file]);
@@ -54,6 +52,12 @@ const Verify = () => {
   //   console.log("result", result);
   // };
   // console.log(sizeError);
+  const handleFile = () => {
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.click();
+    fileInput.onchange = handleFileInput;
+  };
   return (
     <>
       {!file && !sizeError && (
@@ -61,30 +65,40 @@ const Verify = () => {
           className="col verify-box"
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          onDoubleClick={() => {
-            const fileInput = document.createElement("input");
-            fileInput.type = "file";
-            fileInput.click();
-            fileInput.onchange = handleFileInput;
-          }}
+          onDoubleClick={handleFile}
         >
-          <h1 id="p1">Drag Certificate to Verify</h1>
-          <h1>or</h1>
+          <h1 id="p1">Drag Certificate to Verify or</h1>
+          {/* <h1>or</h1> */}
           <h1>Double click to select</h1>
+          <button
+            className="upload-btn"
+            onClick={handleFile}
+            style={{ marginLeft: "33%" }}
+          >
+            <AiOutlineCloudUpload style={{ marginRight: "5px" }} />
+            Upload Certificate
+          </button>
         </div>
       )}
       {file && !sizeError && (
         <div className="col verify-box">
           {/* {file[0].name} ({file[0].size} bytes) */}
-          {fileBufferHash}
+          <div className="hash-box">
+            <h4>File: {file.name}</h4>
+          </div>
+          {/* {fileBufferHash} */}
           <Link to={`/verificationResult/${fileBufferHash}`}>
-            <button className="solid-btn">Verify</button>
+            <button className="upload-btn" style={{ marginLeft: "42%" }}>
+              Verify
+            </button>
           </Link>
         </div>
       )}
       {sizeError && (
         <div className="col verify-box">
-          <h4>File Size Limit Exceeded!</h4>
+          <h4 style={{ marginLeft: "30%", marginTop: "30%" }}>
+            File Size Limit Exceeded!
+          </h4>
         </div>
       )}
     </>

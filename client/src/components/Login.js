@@ -44,12 +44,10 @@ const Login = () => {
       .then((res) => {
         const data = res.data;
 
-        console.log("res", res);
         if (!data) {
           setStatus(STATUS.ERROR);
           setMsg(res.data.message);
         } else {
-          console.log("data", data.email);
           setStatus(STATUS.SUCCESS);
           navigate("/issuer");
           localStorage.setItem("currentUser", JSON.stringify(data));
@@ -58,7 +56,6 @@ const Login = () => {
       })
       .catch((err) => {
         setStatus(STATUS.ERROR);
-        console.log("first", err.response.data.message);
         setMsg(err.response.data.message);
       });
   };

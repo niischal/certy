@@ -2,7 +2,6 @@ const Issuer = require("../models/issuerModel");
 
 const requireAuth = async (req, res, next) => {
   const issuerId = req.headers.issuerid;
-  console.log("req.headers", req.headers);
   if (!issuerId) {
     return res
       .status(401)

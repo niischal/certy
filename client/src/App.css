@@ -145,13 +145,7 @@ font-size: 6.5px;
   box-shadow: 0px 72px 80px -48px #223A28;
   border-radius: 24px;
 }
-.verify-box{
-  background: #00ADAD;
-  border-radius:  0px 24px   24px 0px ;
-}
-.verify-box h4{
-  color: white;
-}
+
 .i-login{
   background: White;
   border-radius: 24px 0px  0px 24px;
@@ -299,4 +293,39 @@ background-color: #00ADAD;
   align-items: center;
   justify-content: center;
   display: flex;
+}
+
+.upload-btn {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-block;
+  border: none;
+  margin-top: 10%;
+}
+
+.upload-btn:hover {
+  background-color: #e0e0e0;
+}
+.hash-box{
+  padding-top: 30px ;
+  margin-top: 20%;
+  margin-left: 28%;
+  color: #f0f0f0;
+}
+.verify-box:hover{
+  background: #08c2c2;
+  cursor: pointer;
+}
+
+.verify-box{
+  background: #00ADAD;
+  border-radius:  0px 24px   24px 0px ;
+  justify-content: space-evenly;
+  display: block;
+}
+.verify-box h4{
+  color: white;
 }

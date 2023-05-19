@@ -1,14 +1,14 @@
 import { FaHome, FaUser, FaReadme } from "react-icons/fa";
 const AdminRoutes = [
-  {
-    id: 1,
-    path: "/admin",
-    name: "Home",
-    icon: <FaHome />,
-  },
+  // {
+  //   id: 1,
+  //   path: "/admin",
+  //   name: "Home",
+  //   icon: <FaHome />,
+  // },
   {
     id: 2,
-    path: "/admin/issuerList",
+    path: "/admin/",
     name: "Issuer List",
     icon: <FaUser />,
   },

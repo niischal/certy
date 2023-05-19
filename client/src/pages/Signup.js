@@ -48,7 +48,6 @@ const Signup = () => {
         .post("/api/issuer/issuerRegistrationRequest", newUser)
         .then((res) => {
           setStatus(STATUS.SUCCESS);
-          console.log(res);
           window.location.href = "/";
         })
         .catch((err) => {

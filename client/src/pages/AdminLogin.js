@@ -34,7 +34,6 @@ function AdminLogin() {
 
   const loginAdmin = async (e) => {
     e.preventDefault();
-    console.log("adminLoginDetails", adminLoginDetails);
     setStatus(STATUS.LOADING);
     if (!adminLoginDetails.username || !adminLoginDetails.password) {
       setStatus(STATUS.ERROR);
@@ -50,7 +49,6 @@ function AdminLogin() {
     await axios
       .post("/api/admin/adminLogin", { adminLoginDetails })
       .then((res) => {
-        console.log("res.message", res);
         const data = res.data;
         if (!data) {
           setStatus(STATUS.ERROR);

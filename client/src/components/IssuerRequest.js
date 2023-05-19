@@ -33,13 +33,10 @@ const IssuerRequest = () => {
       setUsers(res.data);
     }
     getIssuers();
-    if (users.length > 0) {
-      setStatus(STATUS.IDLE);
-    }
+    setStatus(STATUS.IDLE);
   }, [users]);
   //code change
   const rejectIssuerRequest = async (issuerId, address) => {
-    console.log("delete id:", issuerId);
     if (admin.adminAddress === adminAddress) {
       await axios
         .post(
@@ -66,7 +63,6 @@ const IssuerRequest = () => {
   };
 
   const acceptIssuerRequest = async (issuerId, address) => {
-    console.log("issuerId", issuerId);
     const contract = await getContractInfo();
     if (admin.adminAddress !== adminAddress) {
       setStatus(STATUS.ERROR);

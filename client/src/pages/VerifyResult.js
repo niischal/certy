@@ -153,7 +153,6 @@ const VerifyResult = () => {
                 </div>
               </div>
               <div className="fileViewer">
-                {console.log("uri", uri)}
                 <FileViewer uri={uri} />
               </div>
               <hr />

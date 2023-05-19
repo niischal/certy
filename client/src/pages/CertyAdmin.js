@@ -7,17 +7,30 @@ import AdminHome from "../components/AdminHome";
 import IssuerRequest from "../components/IssuerRequest";
 
 const CertyAdmin = () => {
-  const admin = JSON.parse(localStorage.getItem("admin"))
+  const admin = JSON.parse(localStorage.getItem("admin"));
   return (
     <>
       <Navbar name="Admin" />
       <div className="main-container" style={{ display: "flex" }}>
         <Sidebar />
         <Routes>
-          <Route path="/" element={admin ? <AdminHome /> : <Navigate to='/'/>} />
-          <Route exact path="/" element={admin ? <AdminHome /> : <Navigate to='/'/>} />
-          <Route path="/issuerList" element={admin ? <IssuerList />: <Navigate to='/'/>} />
-          <Route path="/issuerRequest" element={admin? <IssuerRequest />: <Navigate to='/'/>} />
+          <Route
+            path="/"
+            element={admin ? <IssuerList /> : <Navigate to="/" />}
+          />
+          <Route
+            exact
+            path="/"
+            element={admin ? <IssuerList /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/issuerList"
+            element={admin ? <IssuerList /> : <Navigate to="/" />}
+          />
+          <Route
+            path="/issuerRequest"
+            element={admin ? <IssuerRequest /> : <Navigate to="/" />}
+          />
         </Routes>
       </div>
     </>
